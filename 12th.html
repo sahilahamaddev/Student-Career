@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>StreamSelector • College Predictor Matrix</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* =========================================
+       PREMIUM EXECUTIVE THEME
+       ========================================= */
+    :root {
+      --bg-base: #05050f; --bg-surface: #13131f; --bg-glass: rgba(15, 15, 25, 0.8);
+      --border-light: rgba(255, 255, 255, 0.1); --text-main: #f8fafc; --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8; --accent-purple: #c084fc; --accent-pink: #ec4899;
+      --accent-emerald: #10b981; --accent-gold: #f59e0b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; opacity: 0; animation: fadeIn 1s forwards; }
+    h1, h2, h3, h4, .logo { font-family: 'Poppins', sans-serif; }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    /* Particles */
+    .particle-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; perspective: 1000px; background: radial-gradient(circle at 50% 50%, #0a0a16 0%, #05050f 100%); pointer-events: none; }
+    .huge-orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.2; animation: float3D 25s linear infinite alternate; }
+    @keyframes float3D { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(50px, -50px, 100px); } }
+
+    /* Navigation */
+    header { position: fixed; width: 100%; top: 0; z-index: 100; background: rgba(5, 5, 15, 0.85); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border-light); padding: 15px 5%; }
+    .nav { display: flex; justify-content: space-between; align-items: center; max-width: 1300px; margin: 0 auto; }
+    .logo { font-weight: 800; font-size: 1.5rem; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer;}
+    .nav-links a { margin-left: 2rem; font-weight: 500; font-size: 0.95rem; color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+    .nav-links a:hover { color: #fff; }
+
+    main { max-width: 1300px; margin: 0 auto; padding: 8rem 2rem 4rem; position: relative; z-index: 10; }
+
+    /* =========================================
+       INPUT FORM UI
+       ========================================= */
+    #inputPhase { transition: 0.5s ease; max-width: 900px; margin: 0 auto;}
+    .header-group { text-align: center; margin-bottom: 3rem; }
+    .eyebrow { color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; font-weight: 800; margin-bottom: 1rem; display: inline-block; padding: 0.4rem 1.5rem; border-radius: 50px; border: 1px solid rgba(56,189,248,0.3); background: rgba(56,189,248,0.1); }
+    .page-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; margin-bottom: 1rem; color: #ffffff; line-height: 1.2; letter-spacing: -1px;}
+
+    .card.glass { background: var(--bg-glass); border: 1px solid var(--border-light); border-top: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(24px); padding: 3rem; border-radius: 24px; box-shadow: 0 30px 60px rgba(0,0,0,0.6); position: relative; overflow: hidden; }
+    
+    .field { margin-bottom: 1.5rem; }
+    .field label { display: block; margin-bottom: 0.5rem; font-weight: 700; color: #e4e4e7; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;}
+    
+    input[type="text"], input[type="number"], select { 
+      width: 100%; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border-light); color: white; 
+      padding: 1rem 1.2rem; border-radius: 12px; font-size: 1.05rem; outline: none; transition: 0.3s; font-weight: 600;
+      -webkit-appearance: none; -moz-appearance: none; appearance: none;
+    }
+    input:focus, select:focus { border-color: var(--accent-cyan); box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); background: rgba(0, 0, 0, 0.8); }
+    
+    .select-wrapper { position: relative; }
+    .select-wrapper::after { content: '▼'; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--accent-cyan); pointer-events: none; font-size: 0.8rem; }
+    select option { background: #0f172a; color: #fff; padding: 10px; }
+
+    .input-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+    .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+    .chip { background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); color: var(--text-muted); padding: 1rem 1.5rem; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: 0.3s; flex: 1; text-align: center; }
+    .chip.active { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple)); color: white; border-color: transparent; box-shadow: 0 10px 20px rgba(192, 132, 252, 0.4); transform: translateY(-3px); }
+
+    .btn-primary { width: 100%; background: linear-gradient(90deg, #10b981, #059669); color: white; border: none; padding: 1.2rem; border-radius: 12px; font-size: 1.1rem; font-weight: 800; cursor: pointer; margin-top: 1rem; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4); text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+    .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 20px 40px rgba(16, 185, 129, 0.6); }
+
+    /* =========================================
+       RESULTS DASHBOARD
+       ========================================= */
+    #resultPhase { display: none; opacity: 0; transform: translateY(20px); transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    #resultPhase.visible { opacity: 1; transform: translateY(0); }
+
+    .dashboard-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 2rem; border-bottom: 1px solid var(--border-light); padding-bottom: 2rem;}
+    
+    /* DOSSIER CARDS (FULL WIDTH FOR DEEP DATA) */
+    .college-grid { display: flex; flex-direction: column; gap: 3rem; perspective: 1200px; }
+    
+    .college-card {
+      background: var(--bg-glass); border: 1px solid var(--border-light); border-top: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px; padding: 2.5rem; display: flex; flex-direction: column; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5); transform-style: preserve-3d;
+      opacity: 0; transform: translateY(50px) rotateX(5deg); animation: popCard 0.8s forwards cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    @keyframes popCard { to { opacity: 1; transform: translateY(0) rotateX(0deg); } }
+    .college-card:hover { border-color: var(--accent-cyan); box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 40px rgba(56,189,248,0.1); }
+
+    .cc-header { display: flex; gap: 1.5rem; align-items: center; margin-bottom: 2rem; border-bottom: 1px dashed var(--border-light); padding-bottom: 1.5rem; }
+    .cc-logo { width: 80px; height: 80px; border-radius: 16px; object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.1); background: #fff;}
+    .cc-title-area { flex: 1; }
+    .cc-title { font-size: 1.8rem; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 0.3rem;}
+    .cc-course { font-size: 1rem; color: var(--accent-cyan); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+    
+    .nirf-badge { background: linear-gradient(135deg, var(--accent-gold), #ea580c); color: #fff; padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 800; box-shadow: 0 5px 15px rgba(245,158,11,0.3); text-align: center; text-transform: uppercase; letter-spacing: 1px;}
+    .match-badge { padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; border: 1px solid; margin-left: 1rem;}
+    .match-safe { background: rgba(16, 185, 129, 0.1); color: var(--accent-emerald); border-color: var(--accent-emerald); }
+    .match-reach { background: rgba(245, 158, 11, 0.1); color: var(--accent-gold); border-color: var(--accent-gold); }
+
+    /* 3-Column Internal Grid for Deep Data */
+    .card-body-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2.5rem; }
+
+    /* Column 1: Placements & Stats */
+    .data-section-title { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem;}
+    
+    .traj-box { background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 10px; border: 1px solid var(--border-light); margin-bottom: 1.5rem; }
+    .traj-path { display: flex; justify-content: space-between; font-family: monospace; font-size: 1rem; color: var(--accent-cyan); font-weight: 700; margin-top: 0.5rem;}
+    .traj-arrow { color: var(--text-muted); font-size: 0.8rem; }
+    
+    .stat-row { display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-size: 0.95rem;}
+    .stat-val { font-weight: 800; color: #fff; }
+
+    /* Column 2: Financials & Scholarship */
+    .finance-box { background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-light); height: 100%; display: flex; flex-direction: column;}
+    .fee-item { display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-size: 0.95rem; color: var(--text-muted); font-weight: 500;}
+    .fee-val { color: #fff; font-family: monospace; font-weight: 600; font-size: 1.05rem;}
+    
+    .sch-alert { margin: 1rem 0; background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--accent-emerald); padding: 1rem; border-radius: 4px; }
+    .sch-alert strong { color: var(--accent-emerald); display: block; font-size: 0.9rem; margin-bottom: 0.3rem;}
+    
+    .net-fee { margin-top: auto; border-top: 1px dashed var(--border-light); padding-top: 1rem; display: flex; justify-content: space-between; align-items: center; }
+    .net-val { font-size: 1.8rem; font-weight: 900; color: var(--accent-emerald); font-family: monospace; text-shadow: 0 0 15px rgba(16,185,129,0.3);}
+
+    /* Column 3: Admissions & Contact */
+    .timeline { position: relative; padding-left: 15px; margin-bottom: 1.5rem;}
+    .timeline::before { content: ''; position: absolute; left: 4px; top: 5px; bottom: 5px; width: 2px; background: rgba(255,255,255,0.1); }
+    .timeline-item { position: relative; margin-bottom: 1rem; color: var(--text-main); font-size: 0.85rem; line-height: 1.5; }
+    .timeline-item::before { content: ''; position: absolute; left: -15px; top: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--bg-surface); border: 2px solid var(--accent-purple); }
+
+    .contact-box { background: rgba(0,0,0,0.4); padding: 1rem; border-radius: 8px; font-size: 0.85rem; color: var(--text-muted); }
+    .contact-box a { color: var(--accent-cyan); text-decoration: none; font-weight: 600; display: block; margin-top: 0.3rem;}
+
+    .btn-apply { width: 100%; padding: 1rem; border-radius: 8px; border: none; background: #fff; color: var(--bg-base); font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-size: 0.9rem; margin-top: 1.5rem; letter-spacing: 1px;}
+    .btn-apply:hover { background: var(--accent-cyan); color: #fff; box-shadow: 0 5px 20px rgba(56,189,248,0.5); }
+
+    @media (max-width: 1024px) {
+      .card-body-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .finance-box { height: auto; }
+    }
+    @media (max-width: 768px) {
+      .input-grid-2 { grid-template-columns: 1fr; }
+      .chips { flex-direction: column; }
+      .cc-header { flex-direction: column; align-items: flex-start; }
+      .nirf-badge { margin-top: 0.5rem; display: inline-block; }
+      .match-badge { margin-left: 0; margin-top: 0.5rem; display: inline-block; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="particle-container" id="particleEngine"></div>
+
+  <header>
+    <nav class="nav">
+      <div class="logo" onclick="window.location.href='index.html'">StreamSelector</div>
+      <div class="nav-links"><a href="index.html">Home</a></div>
+    </nav>
+  </header>
+
+  <main>
+    <div id="inputPhase">
+      <div class="header-group">
+        <span class="eyebrow">Advanced Admission Matrix</span>
+        <h2 class="page-title">University Eligibility & Scholarship Engine</h2>
+        <p style="color: var(--text-muted); font-size: 1.1rem;">Enter your academic profile to generate comprehensive college dossiers including placement data, hostel fees, and exact financial aid calculations.</p>
+      </div>
+
+      <div class="card glass">
+        <form id="collegeForm">
+          
+          <div class="input-grid-2">
+            <div class="field">
+              <label>Applicant Full Name</label>
+              <input type="text" id="stuName" placeholder="e.g. Sahil Ahamad" required />
+            </div>
+            <div class="field">
+              <label>12th Score (% or CGPA to %)</label>
+              <input type="number" id="stuMarks" placeholder="e.g. 92.5" min="1" max="100" step="0.1" required />
+            </div>
+          </div>
+
+          <div class="field" style="margin-top: 1rem;">
+            <label>Academic Stream (Select One)</label>
+            <div class="chips" id="streamChips">
+              <span class="chip active" data-stream="PCM">Engineering (PCM)</span>
+              <span class="chip" data-stream="PCB">Medical / Sciences (PCB)</span>
+              <span class="chip" data-stream="Commerce">Commerce / Mgmt</span>
+              <span class="chip" data-stream="Arts">Arts / Law / Design</span>
+            </div>
+          </div>
+
+          <div class="input-grid-2" style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+            <div class="field">
+              <label>Target Course</label>
+              <div class="select-wrapper">
+                <select id="courseSelect" required>
+                  </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Primary Entrance Exam</label>
+              <div class="select-wrapper">
+                <select id="examSelect" required>
+                  </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Exam Score / Percentile (If Applicable)</label>
+            <input type="number" id="examScore" placeholder="e.g. 95 (Percentile) or 620 (Score)" min="0" max="800" step="0.1" />
+          </div>
+
+          <button type="submit" class="btn-primary" style="margin-top: 2rem;">Compile University Dossiers</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="resultPhase">
+      <div class="dashboard-header">
+        <div>
+          <span class="eyebrow" style="color: var(--accent-purple); border-color: var(--accent-purple); background: rgba(192, 132, 252, 0.1);">Dossiers Generated</span>
+          <h2 class="page-title" style="margin-bottom: 0;">Report for <span id="resName" style="color: var(--accent-cyan);">Student</span></h2>
+          <p style="color: var(--text-muted); font-size: 1.1rem; margin-top: 0.5rem;">Based on <span id="resScore" style="font-weight: 800; color: #fff;"></span>% Aggregate for <strong id="resCourse" style="color: var(--accent-emerald);">Course</strong>.</p>
+        </div>
+      </div>
+
+      <div class="college-grid" id="collegeGrid">
+        </div>
+    </div>
+
+  </main>
+
+  <script>
+    // --- 1. PARTICLES ---
+    const pContainer = document.getElementById('particleEngine');
+    const colorsArr = ['#38bdf8', '#c084fc', '#ec4899', '#10b981'];
+    for(let i=0; i<15; i++) {
+      let orb = document.createElement('div'); orb.className = 'huge-orb';
+      orb.style.width = (Math.random() * 250 + 150) + 'px'; orb.style.height = orb.style.width;
+      orb.style.left = (Math.random() * 100) + 'vw'; orb.style.top = (Math.random() * 100) + 'vh';
+      orb.style.background = colorsArr[Math.floor(Math.random() * colorsArr.length)];
+      orb.style.animationDelay = '-' + (Math.random() * 20) + 's';
+      pContainer.appendChild(orb);
+    }
+
+    // --- 2. DYNAMIC DROPDOWNS ---
+    const DROPDOWN_DATA = {
+      "PCM": {
+        courses: ["B.Tech Computer Science", "B.Tech IT / Software", "B.Tech Electronics (ECE)", "B.Tech Mechanical/Civil", "B.Arch (Architecture)", "BCA / Data Science"],
+        exams: ["JEE Main", "BITSAT", "VITEEE", "SRMJEEE", "MET (Manipal)", "State CET (MHT-CET, KCET etc)", "CUET UG"]
+      },
+      "PCB": {
+        courses: ["MBBS (Medicine)", "BDS (Dental)", "B.Pharma / D.Pharma", "B.Sc Nursing", "B.Sc Biotechnology / Genetics", "B.PT (Physiotherapy)"],
+        exams: ["NEET UG", "AIIMS B.Sc Entrance", "State Medical CET", "CUET UG (Pharma/Bio)", "Manipal MET (Allied Health)"]
+      },
+      "Commerce": {
+        courses: ["B.Com (Hons) / Finance", "BBA (General / Management)", "BBA Finance / FinTech", "CA Foundation / CS", "BA Economics"],
+        exams: ["CUET UG", "IPMAT (IIM Indore/Rohtak)", "Christ CUET", "SET (Symbiosis)", "NMIMS NPAT", "Direct Merit (12th %)"]
+      },
+      "Arts": {
+        courses: ["BA LL.B (Corporate Law)", "B.Des (UI/UX / Product Design)", "BA Psychology / Sociology", "BA Journalism & Mass Comm", "BA Liberal Arts"],
+        exams: ["CLAT / AILET", "UCEED / NID DAT", "CUET UG", "Symbiosis SLAT", "Direct Merit / Portfolio"]
+      }
+    };
+
+    let selectedStream = 'PCM';
+    const chips = document.querySelectorAll('.chip');
+    const courseSelect = document.getElementById('courseSelect');
+    const examSelect = document.getElementById('examSelect');
+
+    function populateDropdowns(stream) {
+      courseSelect.innerHTML = '';
+      examSelect.innerHTML = '';
+      
+      DROPDOWN_DATA[stream].courses.forEach(c => {
+        courseSelect.innerHTML += `<option value="${c}">${c}</option>`;
+      });
+      DROPDOWN_DATA[stream].exams.forEach(e => {
+        examSelect.innerHTML += `<option value="${e}">${e}</option>`;
+      });
+    }
+
+    // Init load
+    populateDropdowns('PCM');
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        chips.forEach(c => c.classList.remove('active'));
+        e.target.classList.add('active');
+        selectedStream = e.target.getAttribute('data-stream');
+        populateDropdowns(selectedStream);
+      });
+    });
+
+    const formatINR = (num) => "₹" + num.toLocaleString('en-IN');
+
+    // --- 3. MASSIVE MOCK DATABASE (20+ COLLEGES) ---
+    const COLLEGE_DB = {
+      "PCM": [
+        { 
+          name: "BITS Pilani", abbr: "BP", nirf: 20, 
+          placements: "89% ↗ 92% ↗ 95% ↗ 96% ↗ 97%", avgPkg: "₹30.3 LPA", highPkg: "₹60.7 LPA",
+          baseFee: 2400000, hostelFee: 250000, 
+          admission: ["Clear BITSAT Entrance Exam", "Online iteration-based counseling", "Submit 12th marksheet (min 75% in PCM required)"],
+          contact: "+91-1596-242205", link: "https://www.bitsadmission.com/",
+          reqScore: 75,
+          calcSch: (marks) => {
+            if(marks >= 95) return { pct: 40, reason: "Merit Tier 1 (Boards > 95%)" };
+            return { pct: 0, reason: "No Scholarship" };
+          }
+        },
+        { 
+          name: "VIT Vellore", abbr: "VIT", nirf: 11, 
+          placements: "85% ↗ 88% ↗ 90% ↗ 93% ↗ 94%", avgPkg: "₹9.2 LPA", highPkg: "₹1.02 Cr",
+          baseFee: 1500000, hostelFee: 480000, 
+          admission: ["Register for VITEEE Exam", "Secure Rank under 1 Lakh", "Phase 1/2 Counseling", "Advance fee payment"],
+          contact: "1800-102-0536", link: "https://viteee.vit.ac.in/",
+          reqScore: 60,
+          calcSch: (marks) => {
+            if(marks >= 90) return { pct: 50, reason: "State Board Topper / Phase 1 Waiver" };
+            if(marks >= 80) return { pct: 25, reason: "Phase 2 Academic Waiver" };
+            return { pct: 0, reason: "No Scholarship" };
+          }
+        },
+        { 
+          name: "SRM IST Chennai", abbr: "SRM", nirf: 18, 
+          placements: "82% ↗ 85% ↗ 88% ↗ 90% ↗ 91%", avgPkg: "₹7.5 LPA", highPkg: "₹57 LPA",
+          baseFee: 1600000, hostelFee: 400000, 
+          admission: ["Clear SRMJEEE Entrance", "Online Choice filling", "Provisional Allotment", "Document verification on campus"],
+          contact: "044-27417000", link: "https://www.srmist.edu.in/",
+          reqScore: 60,
+          calcSch: (marks) => {
+            if(marks >= 95) return { pct: 100, reason: "Founder's Scholarship (100% Tuition)" };
+            if(marks >= 90) return { pct: 50, reason: "Merit Waiver Tier 1" };
+            return { pct: 0, reason: "No Scholarship" };
+          }
+        },
+        { 
+          name: "Manipal Institute of Technology (MIT)", abbr: "MIT", nirf: 61, 
+          placements: "80% ↗ 83% ↗ 86% ↗ 89% ↗ 92%", avgPkg: "₹12.5 LPA", highPkg: "₹54.7 LPA",
+          baseFee: 1800000, hostelFee: 450000, 
+          admission: ["Clear MET (Manipal Entrance Test)", "Participate in centralized counseling", "Branch allocation based on MET rank"],
+          contact: "+91-9243777733", link: "https://manipal.edu/mit.html",
+          reqScore: 60,
+          calcSch: (marks) => {
+            if(marks >= 95) return { pct: 20, reason: "Freeship / Scholar Quota" };
+            return { pct: 0, reason: "No Scholarship" };
+          }
+        },
+        { 
+          name: "Chandigarh University", abbr: "CU", nirf: 19, 
+          placements: "80% ↗ 83% ↗ 86% ↗ 89% ↗ 92%", avgPkg: "₹12.5 LPA", highPkg: "₹54.7 LPA",
+          baseFee: 1800000, hostelFee: 450000, 
+          admission: ["Clear CUCET (Chandigarh University Entrance Test)", "Participate in centralized counseling", "Branch allocation based on CUCET rank"],
+          contact: "+91-9243777733", link: "https://www.cuchandigarh.edu.in/",
+          reqScore: 60,
+          calcSch: (marks) => {
+            if(marks >= 95) return { pct: 20, reason: "Freeship / Scholar Quota" };
+            return { pct: 0, reason: "No Scholarship" };
+          }
+        },
+        { 
+          name: "LPU Jalandhar", abbr: "LPU", nirf: 50, 
+          placements: "75% ↗ 78% ↗ 82% ↗ 85% ↗ 89%", avgPkg: "₹6.8 LPA", highPkg: "₹3 Cr (Intl)",
+          baseFee: 1120000, hostelFee: 320000, 
+          admission: ["Apply & clear LPUNEST Online", "Attend online counseling", "Fee payment to lock seat"],
+          contact: "1800-102-4431", link: "https://www.lpu.in/",
+          reqScore: 60,
+          calcSch: (marks) => {
+            if(marks >= 90) return { pct: 50, reason: "LPUNEST Phase 1 Category I" };
+            if(marks >= 80) return { pct: 40, reason: "LPUNEST Category II" };
+            if(marks >= 70) return { pct: 30, reason: "LPUNEST Category III" };
+            return { pct: 0, reason: "No Scholarship" };
+          }
+        }
+      ],
+      "PCB": [
+        { 
+          name: "KMC Manipal", abbr: "KMC", nirf: 9, 
+          placements: "90% ↗ 93% ↗ 96% ↗ 98% ↗ 100%", avgPkg: "₹12 LPA", highPkg: "₹24 LPA (PG)",
+          baseFee: 7080000, hostelFee: 600000, 
+          admission: ["Clear NEET UG", "Register for MCC (DGHS) Counseling", "Select Deemed Univ -> KMC Manipal", "Medical fitness on campus"],
+          contact: "1800-102-4431", link: "https://manipal.edu/kmc-manipal.html",
+          reqScore: 50,
+          calcSch: (marks) => { return { pct: 0, reason: "Standard Management Quota (NEET based)" }; }
+        },
+        { 
+          name: "CMC Vellore", abbr: "CMC", nirf: 3, 
+          placements: "95% ↗ 96% ↗ 98% ↗ 99% ↗ 100%", avgPkg: "₹10 LPA", highPkg: "₹18 LPA",
+          baseFee: 150000, hostelFee: 120000, 
+          admission: ["Clear NEET UG with high score", "Apply to CMC Vellore separately", "Clear Step-2 Special Interview & Aptitude", "Final Medical Board"],
+          contact: "0416-2284255", link: "https://admissions.cmcvellore.ac.in/",
+          reqScore: 60,
+          calcSch: (marks) => { return { pct: 0, reason: "Highly Subsidized Base Fee Structure" }; }
+        },
+        { 
+          name: "Amity University (Pharma)", abbr: "AU", nirf: 35, 
+          placements: "70% ↗ 75% ↗ 78% ↗ 82% 85%", avgPkg: "₹5.5 LPA", highPkg: "₹12 LPA",
+          baseFee: 800000, hostelFee: 350000, 
+          admission: ["Upload 12th Marks (Direct Admission >80%)", "English Test & Video Interview", "Offer letter generation"],
+          contact: "1800-102-3434", link: "https://www.amity.edu/",
+          reqScore: 60,
+          calcSch: (marks) => {
+            if(marks >= 93) return { pct: 100, reason: "100% Fast Track Admission Waiver" };
+            if(marks >= 88) return { pct: 50, reason: "50% Merit Scholarship" };
+            if(marks >= 75) return { pct: 25, reason: "25% Merit Scholarship" };
+            return { pct: 0, reason: "No Scholarship" };
+          }
+        },
+        { 
+          name: "Siksha 'O' Anusandhan", abbr: "SOA", nirf: 15, 
+          placements: "80% ↗ 82% ↗ 85% ↗ 88% ↗ 90%", avgPkg: "₹6.5 LPA", highPkg: "₹15 LPA",
+          baseFee: 600000, hostelFee: 200000, 
+          admission: ["Clear SAAT Entrance Test / NEET", "Participate in University Counseling", "Document Verification"],
+          contact: "1800-200-3060", link: "https://www.soa.ac.in/",
+          reqScore: 50,
+          calcSch: (marks) => {
+            if(marks >= 90) return { pct: 30, reason: "Academic Excellence Waiver" };
+            return { pct: 0, reason: "Standard Fee" };
+          }
+        },
+        { 
+          name: "Jamia Hamdard", abbr: "JH", nirf: 1, 
+          placements: "85% ↗ 88% ↗ 90% ↗ 92% ↗ 95%", avgPkg: "₹6 LPA", highPkg: "₹14 LPA",
+          baseFee: 550000, hostelFee: 250000, 
+          admission: ["NEET UG for MBBS / CUET for Pharma", "University specific counseling", "Interview (for specific allied courses)"],
+          contact: "011-26059688", link: "http://jamiahamdard.edu/",
+          reqScore: 50,
+          calcSch: (marks) => { return { pct: 0, reason: "Standard Fee Matrix" }; }
+        }
+      ],
+      "Commerce": [
+        { 
+          name: "NMIMS Mumbai", abbr: "NM", nirf: 21, 
+          placements: "88% ↗ 90% ↗ 92% ↗ 95% ↗ 96%", avgPkg: "₹8.5 LPA", highPkg: "₹22 LPA",
+          baseFee: 1500000, hostelFee: 600000, 
+          admission: ["Register & Clear NPAT Entrance", "Campus Allocation based on Merit Rank", "Fee payment & Orientation"],
+          contact: "1800-102-5138", link: "https://www.nmims.edu/",
+          reqScore: 60,
+          calcSch: (marks) => { return { pct: 0, reason: "No Undergraduate Scholarships" }; }
+        },
+        { 
+          name: "Christ University", abbr: "CU", nirf: 60, 
+          placements: "85% ↗ 88% ↗ 90% ↗ 92% ↗ 95%", avgPkg: "₹7.5 LPA", highPkg: "₹20 LPA",
+          baseFee: 650000, hostelFee: 350000, 
+          admission: ["Apply for Christ CUET", "Skill Assessment & Micro Presentation", "Clear Personal Interview (Crucial Step)"],
+          contact: "080-40129100", link: "https://christuniversity.in/",
+          reqScore: 60,
+          calcSch: (marks) => {
+            if(marks >= 90) return { pct: 20, reason: "Alumni / Merit Grant" };
+            return { pct: 0, reason: "Standard Fee" };
+          }
+        },
+        { 
+          name: "Symbiosis (SCMS Pune)", abbr: "SI", nirf: 32, 
+          placements: "86% ↗ 89% ↗ 92% ↗ 94% ↗ 96%", avgPkg: "₹8.2 LPA", highPkg: "₹18 LPA",
+          baseFee: 1200000, hostelFee: 400000, 
+          admission: ["Register and clear SET Exam", "Shortlisting for Personal Interaction (PI)", "Written Ability Test (WAT) & Merit List"],
+          contact: "020-28116200", link: "https://www.scmspune.ac.in/",
+          reqScore: 60,
+          calcSch: (marks) => {
+            if(marks >= 95) return { pct: 50, reason: "University Merit Scholarship" };
+            return { pct: 0, reason: "Standard Fee" };
+          }
+        },
+        { 
+          name: "Ashoka University", abbr: "AS", nirf: 80, 
+          placements: "80% ↗ 85% ↗ 88% ↗ 92% ↗ 95%", avgPkg: "₹11 LPA", highPkg: "₹35 LPA",
+          baseFee: 2800000, hostelFee: 800000, 
+          admission: ["Submit detailed application & essays", "Clear Ashoka Aptitude Test (AAT)", "On-the-spot essay & Interview panel"],
+          contact: "011-40747565", link: "https://www.ashoka.edu.in/",
+          reqScore: 60,
+          calcSch: (marks) => {
+            if(marks >= 95) return { pct: 100, reason: "Exceptional Need/Merit Aid" };
+            if(marks >= 90) return { pct: 50, reason: "50% Financial Aid Bracket" };
+            return { pct: 0, reason: "Standard Tuition" };
+          }
+        },
+        { 
+          name: "Krea University", abbr: "KU", nirf: 100, 
+          placements: "70% ↗ 75% ↗ 80% ↗ 85% ↗ 88%", avgPkg: "₹7.2 LPA", highPkg: "₹16 LPA",
+          baseFee: 2400000, hostelFee: 600000, 
+          admission: ["Krea Aptitude Test", "Personal Story Essay", "Faculty Interview"],
+          contact: "044-71650123", link: "https://krea.edu.in/",
+          reqScore: 60,
+          calcSch: (marks) => {
+            if(marks >= 90) return { pct: 30, reason: "Merit Scholarship" };
+            return { pct: 0, reason: "Standard Tuition" };
+          }
+        }
+      ],
+      "Arts": [
+        { 
+          name: "Symbiosis Law School", abbr: "SLS", nirf: 3, 
+          placements: "80% ↗ 83% ↗ 86% ↗ 89% ↗ 93%", avgPkg: "₹10 LPA", highPkg: "₹24 LPA",
+          baseFee: 1900000, hostelFee: 500000, 
+          admission: ["Appear for SLAT Entrance", "Clear PI-WAT (Interview & Written)", "Check composite merit list"],
+          contact: "020-28116200", link: "https://www.symlaw.ac.in/",
+          reqScore: 60,
+          calcSch: (marks) => {
+            if(marks >= 95) return { pct: 50, reason: "SLAT Merit Topper Waiver" };
+            return { pct: 0, reason: "Standard Fee" };
+          }
+        },
+        { 
+          name: "O.P. Jindal Global University", abbr: "JGU", nirf: 1, 
+          placements: "85% ↗ 88% ↗ 90% ↗ 92% ↗ 95%", avgPkg: "₹11.5 LPA", highPkg: "₹30 LPA",
+          baseFee: 3000000, hostelFee: 900000, 
+          admission: ["LSAT India / JSAT Score", "Submit Personal Statement", "Faculty Interview Panel"],
+          contact: "+91-8396907441", link: "https://jgu.edu.in/",
+          reqScore: 60,
+          calcSch: (marks) => {
+            if(marks >= 95) return { pct: 50, reason: "Savitri Jindal Merit Scholarship" };
+            if(marks >= 90) return { pct: 25, reason: "O.P. Jindal Outstanding Merit" };
+            return { pct: 0, reason: "Standard Tuition" };
+          }
+        },
+        { 
+          name: "Flame University", abbr: "FU", nirf: 90, 
+          placements: "75% ↗ 78% ↗ 82% ↗ 85% ↗ 88%", avgPkg: "₹6.5 LPA", highPkg: "₹14 LPA",
+          baseFee: 2400000, hostelFee: 650000, 
+          admission: ["FEAT Entrance Exam", "Essay Writing", "Personal Interview"],
+          contact: "1800-209-4567", link: "https://www.flame.edu.in/",
+          reqScore: 60,
+          calcSch: (marks) => {
+            if(marks >= 90) return { pct: 30, reason: "Merit-based Waiver" };
+            return { pct: 0, reason: "Standard Tuition" };
+          }
+        },
+        { 
+          name: "Shiv Nadar University", abbr: "SNU", nirf: 62, 
+          placements: "78% ↗ 80% ↗ 84% ↗ 88% ↗ 91%", avgPkg: "₹8.5 LPA", highPkg: "₹22 LPA",
+          baseFee: 1600000, hostelFee: 600000, 
+          admission: ["SNUSAT Entrance Exam", "Academic Proficiency Test (APT)", "Online Interview"],
+          contact: "1800-102-1768", link: "https://snu.edu.in/",
+          reqScore: 60,
+          calcSch: (marks) => {
+            if(marks >= 95) return { pct: 100, reason: "Gifted Student Scholarship" };
+            if(marks >= 90) return { pct: 50, reason: "Merit Scholarship" };
+            return { pct: 0, reason: "Standard Tuition" };
+          }
+        }
+      ]
+    };
+
+    // --- 4. FORM SUBMISSION & RENDERING ---
+    document.getElementById('collegeForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('stuName').value;
+      const marks = parseFloat(document.getElementById('stuMarks').value);
+      const course = document.getElementById('courseSelect').value;
+      const examName = document.getElementById('examSelect').value;
+      const examScore = parseFloat(document.getElementById('examScore').value) || 0;
+
+      const btn = e.target.querySelector('button');
+      btn.innerText = "PROCESSING ALGORITHM...";
+      
+      setTimeout(() => {
+        document.getElementById('inputPhase').style.display = 'none';
+        
+        document.getElementById('resName').innerText = name;
+        document.getElementById('resScore').innerText = marks;
+        document.getElementById('resCourse').innerText = course;
+
+        const grid = document.getElementById('collegeGrid');
+        grid.innerHTML = ''; 
+
+        const colleges = COLLEGE_DB[selectedStream];
+        let delay = 0;
+
+        colleges.forEach((college) => {
+          
+          let matchStatus = "Reach"; let matchClass = "match-reach";
+          if (marks >= (college.reqScore + 10)) { matchStatus = "Safe Target"; matchClass = "match-safe"; } 
+          else if (marks >= college.reqScore) { matchStatus = "Target"; matchClass = "match-target"; }
+
+          const schData = college.calcSch(marks);
+          const discountAmt = (college.baseFee * schData.pct) / 100;
+          const finalFee = college.baseFee - discountAmt;
+          const totalHostel = college.hostelFee; 
+          const netPayable = finalFee + totalHostel;
+
+          let financeHTML = '';
+          if(schData.pct > 0) {
+            financeHTML = `
+              <div class="fee-item"><span>Course Tuition:</span> <span style="text-decoration:line-through; color:var(--accent-pink); font-family:monospace;">${formatINR(college.baseFee)}</span></div>
+              <div class="sch-alert">
+                <strong>${schData.reason}</strong>
+                <span style="font-size:1.2rem;">-${schData.pct}%</span>
+              </div>
+              <div class="fee-item"><span>Hostel & Mess (Total):</span> <span class="fee-val">${formatINR(totalHostel)}</span></div>
+              <div class="net-fee">
+                <span style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase; font-weight:800; letter-spacing:1px;">Net Payable</span>
+                <span class="net-val">${formatINR(netPayable)}</span>
+              </div>
+            `;
+          } else {
+            financeHTML = `
+              <div class="fee-item"><span>Course Tuition:</span> <span class="fee-val">${formatINR(college.baseFee)}</span></div>
+              <div class="fee-item"><span>Hostel & Mess (Total):</span> <span class="fee-val">${formatINR(totalHostel)}</span></div>
+              <div class="net-fee">
+                <span style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase; font-weight:800; letter-spacing:1px;">Net Payable</span>
+                <span class="net-val" style="color:#fff;">${formatINR(netPayable)}</span>
+              </div>
+            `;
+          }
+
+          let stepsHTML = college.admission.map(step => `<li class="timeline-item">${step}</li>`).join("");
+
+          const card = document.createElement('div');
+          card.className = "college-card";
+          card.style.animationDelay = `${delay}s`;
+          delay += 0.2; 
+
+          card.innerHTML = `
+            <div class="cc-header">
+              <img src="https://ui-avatars.com/api/?name=${college.abbr}&background=random&color=fff&size=128&font-size=0.4" class="cc-logo" alt="Logo">
+              <div class="cc-title-area">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                  <h3 class="cc-title">${college.name}</h3>
+                  <span class="match-badge ${matchClass}">${matchStatus}</span>
+                </div>
+                <div style="display:flex; gap:15px; align-items:center;">
+                  <div class="nirf-badge">NIRF ${college.nirf}</div>
+                  <p class="cc-course">${course}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body-grid">
+              
+              <div>
+                <div class="data-section-title">5-Year Placement Record</div>
+                <div class="traj-box">
+                  <span style="font-size:0.75rem; color:var(--text-muted);">2021 TO 2025</span>
+                  <div class="traj-path">${college.placementRecord}</div>
+                </div>
+                <div class="stat-row"><span style="color:var(--text-muted);">Highest Package:</span> <span class="stat-val" style="color:var(--accent-purple);">${college.highPkg}</span></div>
+                <div class="stat-row"><span style="color:var(--text-muted);">Average Package:</span> <span class="stat-val" style="color:var(--accent-cyan);">${college.avgPkg}</span></div>
+              </div>
+
+              <div>
+                <div class="data-section-title">Financial Breakdown</div>
+                <div class="finance-box">
+                  ${financeHTML}
+                </div>
+              </div>
+
+              <div>
+                <div class="data-section-title">Admission Process</div>
+                <ul class="timeline">${stepsHTML}</ul>
+                <div class="contact-box">
+                  Official Admission Desk:
+                  <a href="tel:${college.contact}">📞 ${college.contact}</a>
+                </div>
+                <button class="btn-apply" onclick="window.open('${college.link}', '_blank')">Apply Now ↗</button>
+              </div>
+
+            </div>
+          `;
+
+          // 3D Hover
+          if (window.matchMedia("(pointer: fine)").matches) {
+            card.addEventListener("mousemove", (e) => {
+              const rect = card.getBoundingClientRect();
+              const x = e.clientX - rect.left, y = e.clientY - rect.top;
+              const centerX = rect.width / 2, centerY = rect.height / 2;
+              card.style.transform = `perspective(1200px) rotateX(${((y - centerY) / centerY) * -3}deg) rotateY(${((x - centerX) / centerX) * 3}deg) translateY(-10px) scale(1.02)`;
+            });
+            card.addEventListener("mouseleave", () => {
+              card.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)`;
+            });
+          }
+
+          grid.appendChild(card);
+        });
+
+        const resPhase = document.getElementById('resultPhase');
+        resPhase.style.display = 'block';
+        setTimeout(() => { resPhase.classList.add('visible'); }, 50);
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

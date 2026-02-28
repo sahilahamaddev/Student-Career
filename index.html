@@ -1,8 +1,8 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>StreamSelector • Career Guide After 10th</title>
+  <title>StreamSelector • Career Guide</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
   
@@ -44,13 +44,17 @@
     .hero-badges { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
     .badge { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.8rem; color: #e4e4e7; backdrop-filter: blur(4px); }
 
-    /* Buttons */
-    .hero-actions { display: flex; gap: 1rem; }
-    button { cursor: pointer; font-weight: 700; padding: 1rem 2rem; border-radius: 8px; border: none; transition: all 0.3s ease; font-size: 1rem; }
-    .btn-primary { background: linear-gradient(90deg, #38bdf8, #8b5cf6); color: white; box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4); }
-    .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 30px rgba(139, 92, 246, 0.6); }
-    .btn-ghost { background: transparent; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.2); }
-    .btn-ghost:hover { background: rgba(255, 255, 255, 0.05); border-color: #ffffff; }
+    /* Dual Action Buttons */
+    .hero-actions { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+    button { cursor: pointer; font-weight: 800; padding: 1rem 2rem; border-radius: 12px; border: none; transition: all 0.3s ease; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    
+    /* Primary 10th Button */
+    .btn-primary { background: linear-gradient(90deg, #38bdf8, #8b5cf6); color: white; box-shadow: 0 4px 20px rgba(56, 189, 248, 0.4); text-transform: uppercase; letter-spacing: 1px; }
+    .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 30px rgba(56, 189, 248, 0.6); }
+    
+    /* Secondary 12th Button */
+    .btn-secondary { background: rgba(192, 132, 252, 0.05); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.5); box-shadow: 0 4px 20px rgba(192, 132, 252, 0.1); text-transform: uppercase; letter-spacing: 1px; }
+    .btn-secondary:hover { transform: translateY(-3px) scale(1.02); background: rgba(192, 132, 252, 0.15); box-shadow: 0 8px 30px rgba(192, 132, 252, 0.4); color: #fff; border-color: #c084fc;}
 
     /* =========================================
        UPGRADED 3D "FUTURE YOU" CORE SYSTEM
@@ -67,60 +71,22 @@
     }
 
     /* Dynamic Rotating Rings */
-    .ring {
-      position: absolute;
-      top: 50%; left: 50%;
-      border-radius: 50%;
-      transform-style: preserve-3d;
-      pointer-events: none;
-    }
-
-    .ring-1 { 
-      width: 280px; height: 280px; 
-      margin: -140px 0 0 -140px; 
-      border: 1px solid rgba(56, 189, 248, 0.1); 
-      border-top: 2px solid #38bdf8; 
-      animation: spin3D 8s linear infinite; 
-    }
-    
-    .ring-2 { 
-      width: 380px; height: 380px; 
-      margin: -190px 0 0 -190px; 
-      border: 1px solid rgba(236, 72, 153, 0.1); 
-      border-bottom: 2px solid #ec4899; 
-      animation: spin3DReverse 12s linear infinite; 
-    }
-    
-    .ring-3 { 
-      width: 480px; height: 480px; 
-      margin: -240px 0 0 -240px; 
-      border: 1px dashed rgba(139, 92, 246, 0.2); 
-      border-left: 2px solid #8b5cf6; 
-      animation: spin3D 18s linear infinite; 
-    }
+    .ring { position: absolute; top: 50%; left: 50%; border-radius: 50%; transform-style: preserve-3d; pointer-events: none; }
+    .ring-1 { width: 280px; height: 280px; margin: -140px 0 0 -140px; border: 1px solid rgba(56, 189, 248, 0.1); border-top: 2px solid #38bdf8; animation: spin3D 8s linear infinite; }
+    .ring-2 { width: 380px; height: 380px; margin: -190px 0 0 -190px; border: 1px solid rgba(236, 72, 153, 0.1); border-bottom: 2px solid #ec4899; animation: spin3DReverse 12s linear infinite; }
+    .ring-3 { width: 480px; height: 480px; margin: -240px 0 0 -240px; border: 1px dashed rgba(139, 92, 246, 0.2); border-left: 2px solid #8b5cf6; animation: spin3D 18s linear infinite; }
 
     @keyframes spin3D { 100% { transform: rotateZ(360deg) rotateX(10deg); } }
     @keyframes spin3DReverse { 100% { transform: rotateZ(-360deg) rotateY(10deg); } }
 
     /* Pulsing Energy Core */
     .orbit-center {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%) translateZ(40px);
-      width: 130px; height: 130px;
-      background: radial-gradient(circle at 30% 30%, #fbcfe8, #ec4899, #8b5cf6, #312e81);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-weight: 900;
-      font-size: 1.2rem;
-      color: white;
-      text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) translateZ(40px);
+      width: 130px; height: 130px; background: radial-gradient(circle at 30% 30%, #fbcfe8, #ec4899, #8b5cf6, #312e81);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center;
+      font-weight: 900; font-size: 1.2rem; color: white; text-shadow: 0 2px 5px rgba(0,0,0,0.5);
       box-shadow: 0 0 50px rgba(236, 72, 153, 0.6), inset 0 0 20px rgba(255,255,255,0.6);
-      animation: corePulse 3s infinite alternate ease-in-out;
-      border: 2px solid rgba(255,255,255,0.2);
+      animation: corePulse 3s infinite alternate ease-in-out; border: 2px solid rgba(255,255,255,0.2);
     }
 
     @keyframes corePulse {
@@ -130,22 +96,13 @@
 
     /* Floating Stream Nodes */
     .orbit-dot {
-      position: absolute;
-      background: rgba(15, 15, 25, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      padding: 1rem 1.5rem;
-      border-radius: 16px;
-      width: 230px;
+      position: absolute; background: rgba(15, 15, 25, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px); padding: 1rem 1.5rem; border-radius: 16px; width: 230px;
       box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .orbit-dot:hover {
-      border-color: rgba(255,255,255,0.3);
-      box-shadow: 0 15px 45px rgba(56, 189, 248, 0.2);
-    }
-
+    .orbit-dot:hover { border-color: rgba(255,255,255,0.3); box-shadow: 0 15px 45px rgba(56, 189, 248, 0.2); }
     .dot-label { font-weight: 800; font-size: 1.1rem; margin-bottom: 0.25rem; letter-spacing: 0.5px; }
     .dot-tag { font-size: 0.8rem; color: #a1a1aa; font-weight: 500; }
 
@@ -155,71 +112,64 @@
     .dot-arts { bottom: 15%; left: -25%; animation: floatNode 6s infinite alternate ease-in-out; }
 
     .dot-science .dot-label { color: #38bdf8; }
-    .dot-commerce .dot-label { color: #ec4899; }
-    .dot-arts .dot-label { color: #8b5cf6; }
+    .dot-commerce .dot-label { color: #c084fc; }
+    .dot-arts .dot-label { color: #ec4899; }
 
     @keyframes floatNode {
       0% { transform: translateY(0) rotate(0deg); }
       100% { transform: translateY(-15px) rotate(2deg); }
     }
 
-    /* How it works section - Glassmorphism Cards */
+    /* How it works section */
     #how { margin-top: 6rem; text-align: center; position: relative; z-index: 10; }
     #how h2 { font-size: 2.5rem; margin-bottom: 0.5rem; }
     .section-sub { color: #a1a1aa; margin-bottom: 3rem; }
     .quiz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
     .card.glass { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(16px); padding: 2.5rem; border-radius: 16px; text-align: left; transition: transform 0.3s ease, background 0.3s ease; }
     .card.glass:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.06); }
-    .pill { display: inline-block; background: rgba(56, 189, 248, 0.15); color: #38bdf8; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.75rem; font-weight: 800; margin-bottom: 1.2rem; border: 1px solid rgba(56, 189, 248, 0.3); }
-    .pill-soft { background: rgba(236, 72, 153, 0.15); color: #ec4899; border-color: rgba(236, 72, 153, 0.3); }
+    .pill { display: inline-block; background: rgba(56, 189, 248, 0.15); color: #38bdf8; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.75rem; font-weight: 800; margin-bottom: 1.2rem; border: 1px solid rgba(56, 189, 248, 0.3); text-transform: uppercase; }
+    .pill-soft { background: rgba(192, 132, 252, 0.15); color: #c084fc; border-color: rgba(192, 132, 252, 0.3); }
     .card h3 { font-size: 1.4rem; margin-bottom: 1rem; }
     .about-text { color: #a1a1aa; font-size: 0.95rem; }
 
-    /* Footer */
     footer { text-align: center; padding: 3rem; color: #52525b; font-size: 0.9rem; margin-top: 4rem; border-top: 1px solid rgba(255, 255, 255, 0.05); }
 
     /* =========================================
-       MOBILE RESPONSIVENESS (UPDATED)
+       MOBILE RESPONSIVENESS
        ========================================= */
     @media (max-width: 960px) {
       .hero { flex-direction: column; text-align: center; padding-top: 4rem; }
       .hero-text > p, .hero-badges, .hero-actions { margin-left: auto; margin-right: auto; justify-content: center; }
       .parallax-container { perspective: none; margin-top: 4rem; }
       .hero-orbit { width: 100%; max-width: 350px; height: 350px; transform: none !important; }
-      .ring-3 { display: none; } /* Hide outer ring on mobile to save space */
+      .ring-3 { display: none; } 
+      .dot-science { top: -15%; left: 0%; }
+      .dot-commerce { bottom: -15%; right: 0%; }
+      .dot-arts { bottom: 10%; left: -5%; }
     }
 
-    /* Ultra-Small / Standard Phone Screens */
     @media (max-width: 600px) {
-      /* Navbar Stacking */
       header { padding: 1rem; }
       .nav { flex-direction: column; gap: 1rem; }
       .nav-links { display: flex; gap: 1.5rem; margin: 0; }
       .nav-links a { margin-left: 0; font-size: 0.95rem; }
 
-      /* Adjust Hero Spacing */
       main { padding: 9rem 1.5rem 2rem; }
       .hero-text h1 { font-size: 2.2rem; }
       
-      /* Full Width Buttons */
       .hero-actions { flex-direction: column; width: 100%; }
-      button { width: 100%; justify-content: center; }
+      button { width: 100%; }
 
-      /* Scale down the 3D Orbit */
       .hero-orbit { max-width: 260px; height: 260px; margin-top: 1rem; }
       .orbit-center { width: 90px; height: 90px; font-size: 1rem; }
-
-      /* Shrink floating cards so they don't overflow horizontally */
-      .orbit-dot { width: 140px; padding: 0.8rem; border-radius: 12px; }
+      .orbit-dot { width: 150px; padding: 0.8rem; border-radius: 12px; }
       .dot-label { font-size: 0.9rem; }
       .dot-tag { font-size: 0.75rem; }
 
-      /* Bring cards tighter into the center */
       .dot-science { top: -10%; left: -5%; }
       .dot-commerce { bottom: 5%; right: -10%; }
       .dot-arts { bottom: -15%; left: 5%; }
 
-      /* Fix Grid sizing */
       .quiz-grid { grid-template-columns: 1fr; gap: 1.5rem; }
       .card.glass { padding: 1.5rem; }
     }
@@ -238,8 +188,8 @@
       <div class="logo">StreamSelector</div>
       <div class="nav-links">
         <a href="index.html">Home</a>
-        <a href="quiz.html">Quiz</a>
-        <a href="result.html">Roadmap</a>
+        <a href="login.html">Login</a>
+        <a href="quiz.html">Assessment</a>
       </div>
     </nav>
   </header>
@@ -247,25 +197,31 @@
   <main>
     <section class="hero">
       <div class="hero-text">
-        <p class="eyebrow">Career clarity for students</p>
-        <h1>Confused after <span>10th?</span><br />We map your future.</h1>
+        <p class="eyebrow">Complete Career Clarity</p>
+        <h1>Confused after<br><span>10th or 12th?</span></h1>
         <p>
-          Drop the stress. We help you choose between Science, Commerce, and Arts using a data-driven quiz and visual roadmap tailored just for you.
+          Drop the stress. Whether you are selecting a stream after 10th or picking a college degree after 12th, our AI engine builds your perfect roadmap.
         </p>
 
         <div class="hero-badges">
-          <div class="badge">🇮🇳 For Indian Students</div>
-          <div class="badge">🧠 AI Logic Engine</div>
-          <div class="badge">🗺️ Interactive Roadmap</div>
+          <div class="badge">🇮🇳 Built for Indian Students</div>
+          <div class="badge">🧠 Dual AI Logic Engine</div>
+          <div class="badge">🗺️ Interactive Roadmaps</div>
         </div>
 
         <div class="hero-actions">
-          <a href="quiz.html">
-            <button class="btn-primary">Start the Quiz →</button>
+          <a href="quiz.html" style="text-decoration: none; width: 100%; max-width: 250px;">
+            <button class="btn-primary" style="width: 100%;">
+              Path After 10th
+              <span>→</span>
+            </button>
           </a>
-          <button class="btn-ghost" onclick="document.querySelector('#how').scrollIntoView({behavior:'smooth'})">
-            How it works
-          </button>
+          <a href="12th.html" style="text-decoration: none; width: 100%; max-width: 250px;">
+            <button class="btn-secondary" style="width: 100%;">
+              Path After 12th
+              <span>→</span>
+            </button>
+          </a>
         </div>
       </div>
 
@@ -275,52 +231,52 @@
           <div class="ring ring-2"></div>
           <div class="ring ring-3"></div>
 
-          <div class="orbit-center">Future<br />You</div>
+          <div class="orbit-center">Your<br />Future</div>
           
           <div class="orbit-dot dot-science" data-depth="60">
-            <div class="dot-label">🔬 Science</div>
-            <div class="dot-tag">Engineering, AI, Medicine</div>
+            <div class="dot-label">📚 Class 10th</div>
+            <div class="dot-tag">PCM, PCB, Commerce, Arts</div>
           </div>
           
           <div class="orbit-dot dot-commerce" data-depth="30">
-            <div class="dot-label">📈 Commerce</div>
-            <div class="dot-tag">Finance, Startups, CA</div>
+            <div class="dot-label">🎓 Class 12th</div>
+            <div class="dot-tag">B.Tech, MBBS, BBA, Law</div>
           </div>
           
           <div class="orbit-dot dot-arts" data-depth="50">
-            <div class="dot-label">🎨 Arts</div>
-            <div class="dot-tag">Law, UPSC, Design</div>
+            <div class="dot-label">🚀 Careers</div>
+            <div class="dot-tag">Salaries, Exams, Cutoffs</div>
           </div>
         </div>
       </div>
     </section>
 
     <section id="how">
-      <h2>How this website works</h2>
-      <p class="section-sub">Three simple steps to move from confusion to clarity.</p>
+      <h2>How the ecosystem works</h2>
+      <p class="section-sub">Three simple steps to move from confusion to absolute clarity.</p>
 
       <div class="quiz-grid">
         <div class="card glass">
-          <span class="pill">Step 1</span>
-          <h3>Answer a quick quiz</h3>
+          <span class="pill">Phase 1</span>
+          <h3>Select Your Stage</h3>
           <p class="about-text">
-            Input your academic marks, genuine interests, and comfort level with exams. It takes less than 60 seconds.
+            Choose whether you are a 10th grader looking for a stream, or a 12th grader looking for a college degree.
           </p>
         </div>
 
         <div class="card glass">
-          <span class="pill pill-soft">Step 2</span>
-          <h3>Get your best stream</h3>
+          <span class="pill pill-soft">Phase 2</span>
+          <h3>Deep Assessment</h3>
           <p class="about-text">
-            Our logic engine analyzes your profile and suggests Science, Commerce, or Arts, complete with a confidence score.
+            Input your academic marks, genuine interests, and test your cognitive affinities through our AI-driven matrix.
           </p>
         </div>
         
         <div class="card glass">
-          <span class="pill" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.3);">Step 3</span>
-          <h3>See a visual roadmap</h3>
+          <span class="pill" style="background: rgba(236, 72, 153, 0.15); color: #ec4899; border-color: rgba(236, 72, 153, 0.3);">Phase 3</span>
+          <h3>Actionable Roadmap</h3>
           <p class="about-text">
-            Unlock three detailed career paths for your suggested stream, including college courses and future job roles.
+            Unlock your custom career paths complete with exact entrance exams, expected costs, cutoffs, and future salaries.
           </p>
         </div>
       </div>
@@ -328,7 +284,7 @@
   </main>
 
   <footer>
-    StreamSelector • Built to empower students • HTML, CSS, & JS
+    StreamSelector AI • Built to empower students • HTML, CSS, & JS
   </footer>
 
   <script>
@@ -337,7 +293,6 @@
     const orbit = document.querySelector(".hero-orbit");
     const dots = document.querySelectorAll(".orbit-dot");
 
-    // Only run complex 3D tracking on non-touch devices
     const prefersCoarse = window.matchMedia("(pointer: coarse)").matches;
 
     if (container && !prefersCoarse) {
@@ -348,14 +303,12 @@
         const midX = rect.width / 2;
         const midY = rect.height / 2;
 
-        // Calculate a smooth 3D tilt based on mouse position
         const rotateY = ((x - midX) / midX) * 20;
         const rotateX = ((midY - y) / midY) * -20;
 
         orbit.style.transition = "transform 0.1s ease-out";
         orbit.style.transform = `rotateX(${rotateX + 10}deg) rotateY(${rotateY - 10}deg)`;
 
-        // Make the floating cards heavily react to depth
         dots.forEach(dot => {
           const depth = parseInt(dot.dataset.depth || "40", 10);
           const moveX = ((x - midX) / midX) * (depth / 3);
@@ -365,7 +318,6 @@
         });
       });
 
-      // Reset positions to idle animation state when mouse leaves
       container.addEventListener("mouseleave", () => {
         orbit.style.transition = "transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)";
         orbit.style.transform = "rotateX(15deg) rotateY(-15deg)";
@@ -375,7 +327,6 @@
           dot.style.transform = "translate3d(0, 0, 0)";
         });
         
-        // Remove the inline transition so the CSS keyframe floats can take over again
         setTimeout(() => {
           dots.forEach(dot => dot.style.transition = "");
         }, 800);

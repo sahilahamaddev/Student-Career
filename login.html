@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>StreamSelector • Access Terminal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* =========================================
+       PREMIUM EXECUTIVE THEME
+       ========================================= */
+    :root {
+      --bg-base: #05050f; --bg-surface: #13131f; --bg-glass: rgba(15, 15, 25, 0.75);
+      --border-light: rgba(255, 255, 255, 0.08); --text-main: #f8fafc; --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8; --accent-purple: #c084fc; --accent-pink: #ec4899;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; min-height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+    h1, h2, h3, h4, .logo { font-family: 'Poppins', sans-serif; }
+    
+    /* Fade In Animation */
+    body { opacity: 0; animation: fadeIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+    @keyframes fadeIn { 0% { opacity: 0; transform: scale(1.05); filter: blur(10px); } 100% { opacity: 1; transform: scale(1); filter: blur(0); } }
+
+    /* =========================================
+       MASSIVE 3D PARTICLE ENGINE
+       ========================================= */
+    .particle-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; perspective: 1200px; background: radial-gradient(circle at 50% 50%, #0a0a16 0%, #020205 100%); pointer-events: none; }
+    .huge-orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.3; animation: floatHuge 25s linear infinite alternate; }
+    .mid-node { position: absolute; border-radius: 50%; filter: blur(3px); opacity: 0.6; animation: floatMid 15s ease-in-out infinite alternate; }
+    .micro-star { position: absolute; background: #fff; border-radius: 50%; opacity: 0.8; animation: twinkle 4s infinite alternate; box-shadow: 0 0 5px #fff; }
+
+    @keyframes floatHuge { 0% { transform: translate3d(0, 0, -300px) rotate(0deg); } 100% { transform: translate3d(80px, -80px, 100px) rotate(15deg); } }
+    @keyframes floatMid { 0% { transform: translate3d(0, 0, 0px) scale(1); } 100% { transform: translate3d(-60px, 60px, 200px) scale(1.5); } }
+    @keyframes twinkle { 0% { opacity: 0.1; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1.2); } }
+
+    /* =========================================
+       NAVIGATION
+       ========================================= */
+    header { width: 100%; padding: 20px 5%; z-index: 100; position: fixed; top: 0; background: transparent; }
+    .nav { display: flex; justify-content: center; align-items: center; max-width: 1200px; margin: 0 auto; }
+    .logo { font-weight: 800; font-size: 1.8rem; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; }
+
+    /* =========================================
+       LOGIN TERMINAL CONTAINER
+       ========================================= */
+    main { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; z-index: 10; padding: 0 20px; perspective: 1200px; }
+
+    /* The glowing spinning ring behind the card */
+    .auth-wrapper { position: relative; width: 100%; max-width: 420px; transform-style: preserve-3d; transition: transform 0.1s ease-out; }
+    .auth-wrapper::before { content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 24px; background: conic-gradient(var(--accent-cyan), var(--accent-purple), transparent 50%, var(--accent-cyan)); animation: spinGradient 4s linear infinite; z-index: -1; filter: blur(10px); opacity: 0.7; }
+    @keyframes spinGradient { 100% { transform: rotate(360deg); } }
+
+    .auth-card { background: var(--bg-glass); border: 1px solid rgba(255,255,255,0.1); border-top: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(24px); border-radius: 20px; padding: 3rem 2.5rem; box-shadow: 0 30px 60px rgba(0,0,0,0.8); position: relative; overflow: hidden; }
+    
+    /* Sweeping scanner line */
+    .scanline { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent-cyan); box-shadow: 0 0 15px var(--accent-cyan); animation: scan 4s linear infinite; z-index: 10; opacity: 0.5; }
+    @keyframes scan { 0% { top: 0%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+
+    /* Typography */
+    .auth-title { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; text-align: center; }
+    .auth-sub { color: var(--text-muted); font-size: 0.95rem; text-align: center; margin-bottom: 2.5rem; }
+
+    /* Floating Label Inputs */
+    .input-group { position: relative; margin-bottom: 1.8rem; }
+    .input-group input { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border-light); color: #fff; padding: 1.2rem 1rem 0.6rem; border-radius: 10px; font-size: 1rem; outline: none; transition: 0.3s; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
+    .input-group label { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.95rem; transition: 0.3s; pointer-events: none; }
+    
+    /* Trigger float on focus or when valid (has text) */
+    .input-group input:focus, .input-group input:valid { border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(56, 189, 248, 0.2), inset 0 2px 5px rgba(0,0,0,0.5); background: rgba(0,0,0,0.6); }
+    .input-group input:focus + label, .input-group input:valid + label { top: 10px; font-size: 0.7rem; color: var(--accent-cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Buttons */
+    .btn-primary { width: 100%; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)); color: white; border: none; padding: 1.2rem; border-radius: 10px; font-size: 1.05rem; font-weight: 800; cursor: pointer; box-shadow: 0 10px 30px rgba(192, 132, 252, 0.3); text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; margin-top: 0.5rem; }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(192, 132, 252, 0.6); }
+
+    .social-login { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .btn-social { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border-light); color: var(--text-main); padding: 0.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.9rem; }
+    .btn-social:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+
+    /* Toggle Forms */
+    .auth-forms { position: relative; overflow: hidden; }
+    .form-pane { transition: 0.4s ease-in-out; width: 100%; }
+    #signupPane { display: none; opacity: 0; transform: translateX(50px); }
+
+    .toggle-text { text-align: center; margin-top: 2rem; color: var(--text-muted); font-size: 0.9rem; }
+    .toggle-text span { color: var(--accent-cyan); font-weight: 700; cursor: pointer; transition: 0.3s; }
+    .toggle-text span:hover { color: #fff; text-shadow: 0 0 10px var(--accent-cyan); }
+
+    @media (max-width: 600px) {
+      .auth-wrapper { transform: none !important; } /* Disable 3D tilt on mobile */
+      .auth-card { padding: 2.5rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="particle-container" id="particleEngine"></div>
+
+  <header>
+    <nav class="nav">
+      <div class="logo">StreamSelector</div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="auth-wrapper" id="authWrapper">
+      <div class="auth-card">
+        <div class="scanline"></div>
+
+        <div class="auth-forms">
+          
+          <div class="form-pane" id="loginPane">
+            <h2 class="auth-title">Access Terminal</h2>
+            <p class="auth-sub">Authenticate to view your diagnostic metrics.</p>
+            
+            <form onsubmit="handleLogin(event)">
+              <div class="input-group">
+                <input type="email" id="loginEmail" required autocomplete="off" />
+                <label>Student ID (Email)</label>
+              </div>
+              <div class="input-group">
+                <input type="password" id="loginPass" required autocomplete="off" />
+                <label>Security Key (Password)</label>
+              </div>
+              <div style="text-align: right; margin-top: -1rem; margin-bottom: 1.5rem;">
+                <a href="#" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none;">Lost your key?</a>
+              </div>
+              <button type="submit" class="btn-primary" id="loginBtn">Initialize Link</button>
+            </form>
+
+            <div style="display: flex; align-items: center; text-align: center; margin-top: 1.5rem; color: var(--text-muted); font-size: 0.8rem;">
+              <hr style="flex: 1; border: none; border-top: 1px solid var(--border-light);">
+              <span style="padding: 0 10px; text-transform: uppercase; letter-spacing: 1px;">Or Access Via</span>
+              <hr style="flex: 1; border: none; border-top: 1px solid var(--border-light);">
+            </div>
+
+            <div class="social-login">
+              <button class="btn-social">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                Google
+              </button>
+            </div>
+
+            <p class="toggle-text">Unregistered Profile? <span onclick="toggleForms()">Initialize New Profile</span></p>
+          </div>
+
+          <div class="form-pane" id="signupPane">
+            <h2 class="auth-title">Profile Init</h2>
+            <p class="auth-sub">Create your terminal access credentials.</p>
+            
+            <form onsubmit="handleSignup(event)">
+              <div class="input-group">
+                <input type="text" id="regName" required autocomplete="off" />
+                <label>Full Designation (Name)</label>
+              </div>
+              <div class="input-group">
+                <input type="email" id="regEmail" required autocomplete="off" />
+                <label>Student ID (Email)</label>
+              </div>
+              <div class="input-group">
+                <input type="password" id="regPass" required autocomplete="off" />
+                <label>Create Security Key</label>
+              </div>
+              <button type="submit" class="btn-primary" id="signupBtn">Compile Profile</button>
+            </form>
+
+            <p class="toggle-text">Credentials active? <span onclick="toggleForms()">Return to Login</span></p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // --- 1. PREMIUM 3D PARTICLE GENERATOR ---
+    const pContainer = document.getElementById('particleEngine');
+    const colorsArr = ['#38bdf8', '#c084fc', '#ec4899'];
+    
+    for(let i=0; i<6; i++) {
+      let orb = document.createElement('div');
+      orb.className = 'huge-orb';
+      orb.style.width = (Math.random() * 300 + 200) + 'px';
+      orb.style.height = orb.style.width;
+      orb.style.left = (Math.random() * 100) + 'vw';
+      orb.style.top = (Math.random() * 100) + 'vh';
+      orb.style.background = colorsArr[Math.floor(Math.random() * colorsArr.length)];
+      orb.style.animationDelay = '-' + (Math.random() * 20) + 's';
+      pContainer.appendChild(orb);
+    }
+    for(let i=0; i<15; i++) {
+      let node = document.createElement('div');
+      node.className = 'mid-node';
+      node.style.width = (Math.random() * 10 + 5) + 'px';
+      node.style.height = node.style.width;
+      node.style.left = (Math.random() * 100) + 'vw';
+      node.style.top = (Math.random() * 100) + 'vh';
+      node.style.background = colorsArr[Math.floor(Math.random() * colorsArr.length)];
+      node.style.animationDelay = '-' + (Math.random() * 10) + 's';
+      pContainer.appendChild(node);
+    }
+    for(let i=0; i<60; i++) {
+      let star = document.createElement('div');
+      star.className = 'micro-star';
+      star.style.width = (Math.random() * 3 + 1) + 'px';
+      star.style.height = star.style.width;
+      star.style.left = (Math.random() * 100) + 'vw';
+      star.style.top = (Math.random() * 100) + 'vh';
+      star.style.animationDelay = '-' + (Math.random() * 5) + 's';
+      pContainer.appendChild(star);
+    }
+
+    // --- 2. 3D HOVER PHYSICS ON CARD ---
+    const authWrapper = document.getElementById('authWrapper');
+    if (window.matchMedia("(pointer: fine)").matches) {
+      document.addEventListener("mousemove", (e) => {
+        const x = e.clientX - window.innerWidth / 2;
+        const y = e.clientY - window.innerHeight / 2;
+        const rotateX = (y / window.innerHeight) * -15; // Max 15 deg tilt
+        const rotateY = (x / window.innerWidth) * 15;
+        authWrapper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+      document.addEventListener("mouseleave", () => {
+        authWrapper.style.transform = `rotateX(0deg) rotateY(0deg)`;
+      });
+    }
+
+    // --- 3. FORM TOGGLE LOGIC ---
+    let isLogin = true;
+    function toggleForms() {
+      const loginPane = document.getElementById('loginPane');
+      const signupPane = document.getElementById('signupPane');
+      
+      if (isLogin) {
+        // Switch to Signup
+        loginPane.style.opacity = '0';
+        loginPane.style.transform = 'translateX(-50px)';
+        setTimeout(() => {
+          loginPane.style.display = 'none';
+          signupPane.style.display = 'block';
+          setTimeout(() => {
+            signupPane.style.opacity = '1';
+            signupPane.style.transform = 'translateX(0)';
+          }, 50);
+        }, 300);
+      } else {
+        // Switch to Login
+        signupPane.style.opacity = '0';
+        signupPane.style.transform = 'translateX(50px)';
+        setTimeout(() => {
+          signupPane.style.display = 'none';
+          loginPane.style.display = 'block';
+          setTimeout(() => {
+            loginPane.style.opacity = '1';
+            loginPane.style.transform = 'translateX(0)';
+          }, 50);
+        }, 300);
+      }
+      isLogin = !isLogin;
+    }
+
+    // --- 4. SUBMISSION LOGIC ---
+    function handleLogin(e) {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      btn.innerText = "AUTHENTICATING...";
+      btn.style.background = "var(--accent-emerald)";
+      btn.style.boxShadow = "0 10px 30px rgba(16, 185, 129, 0.4)";
+      
+      // Simulate API call, then warp to home/quiz
+      setTimeout(() => {
+        btn.innerText = "ACCESS GRANTED 🚀";
+        setTimeout(() => { window.location.href = 'index.html'; }, 500);
+      }, 1000);
+    }
+
+    function handleSignup(e) {
+      e.preventDefault();
+      const btn = document.getElementById('signupBtn');
+      btn.innerText = "WRITING TO MATRIX...";
+      btn.style.background = "var(--accent-emerald)";
+      
+      setTimeout(() => {
+        btn.innerText = "PROFILE INITIALIZED 🚀";
+        setTimeout(() => { window.location.href = 'quiz.html'; }, 500); // Send new users straight to quiz
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
