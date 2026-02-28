@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>StreamSelector • Deep Assessment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* =========================================
+       PREMIUM EXECUTIVE THEME & ORBIT BACKGROUND
+       ========================================= */
+    :root {
+      --bg-base: #020205; --bg-surface: #13131f; --bg-glass: rgba(15, 15, 25, 0.7);
+      --border-light: rgba(255, 255, 255, 0.08); --text-main: #f8fafc; --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8; --accent-purple: #c084fc; --accent-pink: #ec4899;
+      --accent-emerald: #10b981; --accent-gold: #f59e0b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: var(--bg-base); background-image: radial-gradient(circle at 50% 50%, #1a0b2e 0%, #020204 70%); color: var(--text-main); font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; }
+    h1, h2, h3, h4, .logo { font-family: 'Poppins', sans-serif; }
+
+    /* --- HUGE 3D ORBIT SYSTEM (RESTORED & ENHANCED) --- */
+    .orbit-system-wrapper { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; pointer-events: none; perspective: 1200px; overflow: hidden; }
+    .orbit-stage { position: absolute; top: 50%; left: 50%; width: 0; height: 0; transform-style: preserve-3d; transform: rotateX(65deg) rotateY(-10deg); transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 1s ease; }
+    
+    .orbit-core { position: absolute; top: 50%; left: 50%; width: 20vw; height: 20vw; transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%); border-radius: 50%; box-shadow: 0 0 100px rgba(56, 189, 248, 0.5); animation: pulseCoreBg 4s infinite alternate; }
+    .orbit-ring { position: absolute; top: 50%; left: 50%; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 40px rgba(56, 189, 248, 0.15), inset 0 0 40px rgba(56, 189, 248, 0.15); }
+    
+    .ring-1 { width: 45vw; height: 45vw; border: 2px solid rgba(56, 189, 248, 0.6); animation: spinOrbit 25s linear infinite; box-shadow: 0 0 30px rgba(56,189,248,0.3); }
+    .ring-2 { width: 75vw; height: 75vw; border: 2px dashed rgba(236, 72, 153, 0.5); animation: spinOrbitReverse 40s linear infinite; box-shadow: 0 0 40px rgba(236,72,153,0.2); }
+    .ring-3 { width: 105vw; height: 105vw; border: 2px solid rgba(139, 92, 246, 0.4); animation: spinOrbit 70s linear infinite; }
+    .ring-4 { width: 145vw; height: 145vw; border: 1px dotted rgba(56, 189, 248, 0.3); animation: spinOrbitReverse 100s linear infinite; }
+
+    .particle-universe { position: absolute; top: 50%; left: 50%; width: 160vw; height: 160vw; transform: translate(-50%, -50%); animation: spinOrbit 120s linear infinite; transform-style: preserve-3d; }
+    .particle { position: absolute; border-radius: 50%; background: #ffffff; opacity: 0; animation: pulseParticle linear infinite; }
+
+    @keyframes spinOrbit { 0% { transform: translate(-50%, -50%) rotateZ(0deg); } 100% { transform: translate(-50%, -50%) rotateZ(360deg); } }
+    @keyframes spinOrbitReverse { 0% { transform: translate(-50%, -50%) rotateZ(360deg); } 100% { transform: translate(-50%, -50%) rotateZ(0deg); } }
+    @keyframes pulseCoreBg { 0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; } 100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; } }
+    @keyframes pulseParticle { 0% { opacity: 0; transform: scale(0.5) translateZ(0); } 50% { opacity: 1; transform: scale(1.5) translateZ(50px); } 100% { opacity: 0; transform: scale(0.5) translateZ(0); } }
+
+    /* =========================================
+       NAVIGATION
+       ========================================= */
+    header { position: fixed; top: 0; left: 0; width: 100%; padding: 15px 5%; z-index: 100; background: rgba(2, 2, 5, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border-light); }
+    .nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+    .logo { font-weight: 800; font-size: 1.5rem; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-links a { margin-left: 2rem; font-weight: 500; font-size: 0.95rem; color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+    .nav-links a:hover { color: var(--accent-cyan); }
+
+    /* =========================================
+       MAIN LAYOUT & CARDS
+       ========================================= */
+    main { max-width: 1200px; margin: 0 auto; padding: 8rem 2rem 4rem; position: relative; z-index: 10; }
+    .header-group { text-align: center; margin-bottom: 3rem; }
+    .eyebrow { color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; display: inline-block; background: rgba(56, 189, 248, 0.1); padding: 0.4rem 1.5rem; border-radius: 50px; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .page-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; margin-bottom: 1rem; color: #ffffff; }
+
+    .quiz-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 3rem; align-items: stretch; }
+    
+    .card.glass { background: var(--bg-glass); border: 1px solid var(--border-light); backdrop-filter: blur(24px); padding: 2.5rem; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
+
+    .form-phase { transition: opacity 0.4s ease, transform 0.4s ease; }
+    .hidden-phase { opacity: 0; transform: translateX(-50px); position: absolute; pointer-events: none; visibility: hidden; top: 2.5rem; left: 2.5rem; right: 2.5rem; }
+    .active-phase { opacity: 1; transform: translateX(0); position: relative; visibility: visible; }
+
+    /* Form Fields */
+    .field { margin-bottom: 1.5rem; }
+    .field label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #e4e4e7; font-size: 0.9rem; }
+    
+    input[type="text"], input[type="number"] { width: 100%; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); color: white; padding: 0.8rem 1rem; border-radius: 8px; font-size: 0.95rem; outline: none; transition: 0.3s; }
+    input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); background: rgba(0, 0, 0, 0.8); }
+
+    .input-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .input-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+    /* Gender Toggle */
+    .gender-group { display: flex; gap: 1rem; }
+    .gender-label { flex: 1; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 8px; cursor: pointer; transition: 0.3s; font-weight: 600; font-size: 0.9rem; color: var(--text-muted); }
+    .gender-label input { display: none; }
+    .gender-label:hover { border-color: var(--accent-cyan); color: #fff; }
+    .gender-label.selected { background: rgba(56, 189, 248, 0.2); border-color: var(--accent-cyan); color: #fff; box-shadow: 0 0 15px rgba(56,189,248,0.3); }
+
+    /* Chips */
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
+    .chip.active { background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink)); color: white; border-color: transparent; box-shadow: 0 5px 15px rgba(236, 72, 153, 0.4); transform: scale(1.05); }
+
+    /* Custom Sliders for Phase 2 */
+    input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; margin-bottom: 0.5rem; }
+    input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 22px; width: 22px; border-radius: 50%; cursor: pointer; margin-top: -8px; border: 2px solid #fff; transition: transform 0.2s; }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.3); }
+    
+    .slider-math::-webkit-slider-thumb { background: var(--accent-cyan); box-shadow: 0 0 15px var(--accent-cyan); }
+    .slider-bio::-webkit-slider-thumb { background: var(--accent-emerald); box-shadow: 0 0 15px var(--accent-emerald); }
+    .slider-biz::-webkit-slider-thumb { background: var(--accent-gold); box-shadow: 0 0 15px var(--accent-gold); }
+    .slider-art::-webkit-slider-thumb { background: var(--accent-pink); box-shadow: 0 0 15px var(--accent-pink); }
+    
+    .rating-labels { display: flex; justify-content: space-between; padding: 0 5px; color: #71717a; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+
+    .btn-primary { width: 100%; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)); color: white; border: none; padding: 1.2rem; border-radius: 10px; font-size: 1rem; font-weight: 800; cursor: pointer; margin-top: 1rem; box-shadow: 0 10px 30px rgba(192, 132, 252, 0.4); text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(192, 132, 252, 0.6); }
+
+    /* Right Side Hologram */
+    .holo-container { display: flex; justify-content: center; align-items: center; perspective: 1000px; }
+    .holo-card { position: relative; width: 100%; height: 100%; min-height: 450px; background: rgba(5, 5, 8, 0.8); border: 1px solid var(--accent-cyan); border-radius: 20px; padding: 2.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 30px rgba(56,189,248,0.1); transform: rotateX(5deg) rotateY(-10deg); animation: float 6s infinite alternate ease-in-out; display: flex; flex-direction: column; }
+    @keyframes float { 0% { transform: translateY(0) rotateX(5deg) rotateY(-10deg); } 100% { transform: translateY(-15px) rotateX(8deg) rotateY(-5deg); } }
+    
+    .status-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 12px;}
+    .terminal { margin-top: auto; color: var(--accent-cyan); font-family: monospace; font-size: 1rem; text-shadow: 0 0 10px var(--accent-cyan); }
+
+    @media (max-width: 960px) {
+      .quiz-grid { grid-template-columns: 1fr; }
+      .input-grid-3 { grid-template-columns: 1fr 1fr; }
+      .holo-card { transform: none !important; animation: none; min-height: 300px; margin-top: 2rem;}
+      .hidden-phase { top: 1.5rem; left: 1.5rem; right: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="orbit-system-wrapper">
+    <div class="orbit-stage" id="orbitStage">
+      <div class="orbit-core"></div>
+      <div class="orbit-ring ring-1"></div>
+      <div class="orbit-ring ring-2"></div>
+      <div class="orbit-ring ring-3"></div>
+      <div class="orbit-ring ring-4"></div>
+      <div class="particle-universe" id="particleUniverse"></div>
+    </div>
+  </div>
+
+  <header>
+    <nav class="nav">
+      <div class="logo">StreamSelector</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="quiz.html" style="color: #fff;">Assessment</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="header-group">
+      <span class="eyebrow" id="topEyebrow">Phase 1: Academic Data</span>
+      <h2 class="page-title" id="topHeading">System Core Initialization</h2>
+      <p class="section-sub" id="topSub">Enter your personal and academic details to begin the diagnostic process.</p>
+    </div>
+
+    <div class="quiz-grid">
+      
+      <div class="card glass">
+        
+        <form id="phase1Form" class="form-phase active-phase">
+          
+          <div class="input-grid-2">
+            <div class="field">
+              <label>Full Name</label>
+              <input type="text" id="userName" placeholder="e.g. Sahil" required />
+            </div>
+            <div class="field">
+              <label>Gender Identity</label>
+              <div class="gender-group">
+                <label class="gender-label selected" id="lblMale">
+                  <input type="radio" name="gender" value="Male" checked onclick="selectGender('Male')"> Male
+                </label>
+                <label class="gender-label" id="lblFemale">
+                  <input type="radio" name="gender" value="Female" onclick="selectGender('Female')"> Female
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top: 1rem;">
+            <label>10th Grade Subject Scores (Out of 100)</label>
+            <div class="input-grid-3">
+              <input type="number" id="mathMarks" placeholder="Math" min="0" max="100" required />
+              <input type="number" id="scienceMarks" placeholder="Science" min="0" max="100" required />
+              <input type="number" id="englishMarks" placeholder="English" min="0" max="100" required />
+              <input type="number" id="sstMarks" placeholder="SST (Social)" min="0" max="100" required />
+              <input type="number" id="hindiMarks" placeholder="Hindi/Local" min="0" max="100" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Primary Vocational Interest</label>
+            <div class="chips" id="interestChips">
+              <span class="chip active" data-interest="computer">Computer / Tech</span>
+              <span class="chip" data-interest="biology">Biology / Healthcare</span>
+              <span class="chip" data-interest="math">Core Mathematics</span>
+              <span class="chip" data-interest="business">Business / Commerce</span>
+              <span class="chip" data-interest="arts">Arts / Humanities</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary">Compile Base Metrics</button>
+        </form>
+
+        <form id="phase2Form" class="form-phase hidden-phase">
+          <h3 style="color: var(--accent-purple); font-size: 1.5rem; margin-bottom: 0.5rem;">Deep Affinity Scan</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">Rate your genuine interest and passion for these specific career domains.</p>
+
+          <div class="field">
+            <label style="color: var(--accent-cyan);">Interest in Mathematics & Tech (Engineering, Coding)</label>
+            <input id="affMath" type="range" class="slider-math" min="1" max="5" value="3" />
+            <div class="rating-labels"><span>Low</span><span>Neutral</span><span>High</span></div>
+          </div>
+          <div class="field">
+            <label style="color: var(--accent-emerald);">Interest in Biology & Life Sciences (Medical, Pharma)</label>
+            <input id="affBio" type="range" class="slider-bio" min="1" max="5" value="3" />
+            <div class="rating-labels"><span>Low</span><span>Neutral</span><span>High</span></div>
+          </div>
+          <div class="field">
+            <label style="color: var(--accent-gold);">Interest in Commerce & Finance (Business, CA, Markets)</label>
+            <input id="affBiz" type="range" class="slider-biz" min="1" max="5" value="3" />
+            <div class="rating-labels"><span>Low</span><span>Neutral</span><span>High</span></div>
+          </div>
+          <div class="field">
+            <label style="color: var(--accent-pink);">Interest in Arts & Humanities (Law, Design, UPSC)</label>
+            <input id="affArt" type="range" class="slider-art" min="1" max="5" value="3" />
+            <div class="rating-labels"><span>Low</span><span>Neutral</span><span>High</span></div>
+          </div>
+
+          <div class="field" style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+            <label style="color: #fff;">Competitive Exam Pressure Tolerance</label>
+            <input id="stressLevel" type="range" min="1" max="5" value="3" style="filter: hue-rotate(90deg);" />
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#94a3b8;"><span>Relaxed (1)</span><span>Anxious (5)</span></div>
+          </div>
+
+          <button type="submit" class="btn-primary" style="background: linear-gradient(90deg, #10b981, #059669); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);">Generate Final Roadmap</button>
+        </form>
+
+      </div>
+
+      <div class="holo-container">
+        <div class="holo-card">
+          <h3 style="color: #fff; margin-bottom: 1.5rem; font-size: 1.4rem;">Engine Status</h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem;">Awaiting data input to align probability vectors for accurate career mapping.</p>
+          
+          <div class="status-row">
+            <span style="color: var(--text-muted);">Phase 1: Academic Input</span>
+            <span id="status1" style="color: var(--accent-gold); font-weight: bold;">PENDING</span>
+          </div>
+          <div class="status-row">
+            <span style="color: var(--text-muted);">Phase 2: Domain Affinity</span>
+            <span id="status2" style="color: #ef4444; font-weight: bold;">LOCKED</span>
+          </div>
+
+          <div class="terminal" id="holoTerminal">> SYSTEM STANDBY...</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // 3D Orbital Particle Generator
+    const universe = document.getElementById('particleUniverse');
+    for (let i = 0; i < 200; i++) {
+      let p = document.createElement('div');
+      p.className = 'particle';
+      let size = Math.random() * 4 + 2; 
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = Math.random() * 100 + '%';
+      
+      let colorType = Math.random();
+      if (colorType > 0.85) { p.style.background = '#38bdf8'; p.style.boxShadow = '0 0 12px #38bdf8'; } 
+      else if (colorType > 0.7) { p.style.background = '#ec4899'; p.style.boxShadow = '0 0 12px #ec4899'; } 
+      else { p.style.background = '#ffffff'; p.style.boxShadow = '0 0 10px #ffffff'; }
+      
+      p.style.animationDuration = (Math.random() * 4 + 2) + 's';
+      p.style.animationDelay = (Math.random() * 5) + 's';
+      universe.appendChild(p);
+    }
+
+    // Gender Selection UI
+    let userGender = "Male";
+    window.selectGender = function(val) {
+      userGender = val;
+      document.getElementById('lblMale').classList.remove('selected');
+      document.getElementById('lblFemale').classList.remove('selected');
+      if(val === 'Male') document.getElementById('lblMale').classList.add('selected');
+      else document.getElementById('lblFemale').classList.add('selected');
+    }
+
+    // Interest Chips
+    let selectedInterest = 'computer';
+    const chips = document.querySelectorAll('.chip');
+    chips.forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        chips.forEach(c => c.classList.remove('active'));
+        e.target.classList.add('active');
+        selectedInterest = e.target.getAttribute('data-interest');
+      });
+    });
+
+    let userData = {};
+
+    // PHASE 1 SUBMIT
+    document.getElementById('phase1Form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      userData.name = document.getElementById('userName').value;
+      userData.gender = userGender;
+      userData.math = parseInt(document.getElementById('mathMarks').value);
+      userData.science = parseInt(document.getElementById('scienceMarks').value);
+      userData.english = parseInt(document.getElementById('englishMarks').value);
+      userData.sst = parseInt(document.getElementById('sstMarks').value);
+      userData.hindi = parseInt(document.getElementById('hindiMarks').value);
+      userData.interest = selectedInterest;
+
+      const btn = e.target.querySelector('button');
+      btn.innerText = "COMPILING...";
+      
+      document.getElementById('status1').innerText = "COMPILED";
+      document.getElementById('status1').style.color = "var(--accent-emerald)";
+      document.getElementById('holoTerminal').innerText = "> UNLOCKING PHASE 2...";
+      document.getElementById('holoTerminal').style.color = "var(--accent-purple)";
+
+      // TILT ORBIT BACKGROUND DEEPER
+      document.getElementById('orbitStage').style.transform = "rotateX(75deg) rotateY(10deg) scale(1.1)";
+
+      setTimeout(() => {
+        document.getElementById('phase1Form').classList.remove('active-phase');
+        document.getElementById('phase1Form').classList.add('hidden-phase');
+        document.getElementById('phase2Form').classList.remove('hidden-phase');
+        document.getElementById('phase2Form').classList.add('active-phase');
+
+        document.getElementById('topEyebrow').innerText = "Phase 2: Domain Affinity";
+        document.getElementById('topHeading').innerText = "Cognitive Calibration";
+        document.getElementById('topSub').innerText = "We need to understand your natural inclinations to finalize the matrix.";
+        document.getElementById('status2').innerText = "AWAITING INPUT";
+        document.getElementById('status2').style.color = "var(--accent-gold)";
+        document.getElementById('holoTerminal').innerText = "> SENSORS ONLINE...";
+      }, 600);
+    });
+
+    // PHASE 2 SUBMIT
+    document.getElementById('phase2Form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      userData.affMath = parseInt(document.getElementById('affMath').value);
+      userData.affBio = parseInt(document.getElementById('affBio').value);
+      userData.affArt = parseInt(document.getElementById('affArt').value);
+      userData.affBiz = parseInt(document.getElementById('affBiz').value);
+      userData.stress = parseInt(document.getElementById('stressLevel').value);
+
+      // ADVANCED CALCULATION LOGIC using specific sliders
+      let pcmScore = userData.math + userData.science + (userData.affMath * 15);
+      let pcbScore = userData.science + userData.english + (userData.affBio * 15);
+      let commScore = userData.math + userData.sst + (userData.affBiz * 15);
+      let artsScore = userData.english + userData.hindi + userData.sst + (userData.affArt * 15);
+
+      let finalStream = "Arts";
+      let maxScore = Math.max(pcmScore, pcbScore, commScore, artsScore);
+
+      // Override if direct interest was specified heavily
+      if (userData.interest === 'biology' && userData.affBio >= 4) finalStream = "PCB";
+      else if (userData.interest === 'computer' && userData.affMath >= 4) finalStream = "PCM";
+      else if (userData.interest === 'business' && userData.affBiz >= 4) finalStream = "Commerce";
+      else if (userData.interest === 'arts' && userData.affArt >= 4) finalStream = "Arts";
+      else {
+        // Fallback to purely score-based
+        if(maxScore === pcmScore) finalStream = "PCM";
+        else if (maxScore === pcbScore) finalStream = "PCB";
+        else if (maxScore === commScore) finalStream = "Commerce";
+      }
+
+      userData.stream = finalStream;
+      localStorage.setItem('streamResult', JSON.stringify(userData));
+      
+      const btn = e.target.querySelector('button');
+      btn.innerText = "WARPING TO ROADMAP... 🚀";
+      
+      document.getElementById('status2').innerText = "LOCKED";
+      document.getElementById('status2').style.color = "var(--accent-emerald)";
+      document.getElementById('holoTerminal').innerText = "> MATRIX COMPLETE. WARPING...";
+      document.getElementById('holoTerminal').style.color = "var(--accent-emerald)";
+
+      // WARP EFFECT
+      document.getElementById('orbitStage').style.transform = "rotateX(90deg) scale(3)";
+      document.getElementById('orbitStage').style.opacity = "0";
+
+      setTimeout(() => { window.location.href = 'result.html'; }, 1000);
+    });
+  </script>
+</body>
+</html>

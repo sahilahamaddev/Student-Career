@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>StreamSelector • Diagnostic Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* =========================================
+       PREMIUM EXECUTIVE THEME
+       ========================================= */
+    :root {
+      --bg-base: #05050f; --bg-surface: #13131f; --bg-glass: rgba(15, 15, 25, 0.65);
+      --border-light: rgba(255, 255, 255, 0.08); --text-main: #f8fafc; --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8; --accent-purple: #c084fc; --accent-pink: #ec4899;
+      --accent-emerald: #10b981; --accent-gold: #f59e0b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: var(--bg-base); color: var(--text-main); overflow-x: hidden; line-height: 1.6; min-height: 100vh; font-family: 'Inter', sans-serif; opacity: 0; animation: fadeIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+    h1, h2, h3, h4, .logo { font-family: 'Poppins', sans-serif; }
+    @keyframes fadeIn { 0% { opacity: 0; transform: scale(1.02); } 100% { opacity: 1; transform: scale(1); } }
+
+    /* =========================================
+       MASSIVE 3D PARTICLE ENGINE
+       ========================================= */
+    .particle-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; perspective: 1200px; background: radial-gradient(circle at 50% 50%, #0a0a16 0%, #030308 100%); overflow: hidden; pointer-events: none; }
+    
+    /* Tier 1: Huge ambient orbs */
+    .huge-orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.25; animation: floatHuge 25s linear infinite alternate; }
+    /* Tier 2: Mid-sized glowing data nodes */
+    .mid-node { position: absolute; border-radius: 50%; filter: blur(4px); opacity: 0.6; animation: floatMid 15s ease-in-out infinite alternate; }
+    /* Tier 3: Micro stars for depth */
+    .micro-star { position: absolute; border-radius: 50%; opacity: 0.8; animation: twinkle 4s infinite alternate; }
+
+    @keyframes floatHuge { 0% { transform: translate3d(0, 0, -300px) rotate(0deg); } 100% { transform: translate3d(80px, -80px, 100px) rotate(15deg); } }
+    @keyframes floatMid { 0% { transform: translate3d(0, 0, 0px) scale(1); } 100% { transform: translate3d(-60px, 60px, 200px) scale(1.5); } }
+    @keyframes twinkle { 0% { opacity: 0.1; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1.2); } }
+
+    /* Navigation */
+    header { position: fixed; width: 100%; top: 0; z-index: 100; background: rgba(5, 5, 15, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border-light); padding: 15px 5%; }
+    .nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+    .logo { font-weight: 800; font-size: 1.5rem; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-links a { margin-left: 2rem; font-weight: 500; font-size: 0.95rem; color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+    .nav-links a:hover { color: #fff; }
+
+    main { max-width: 1200px; margin: 0 auto; padding: 8rem 2rem 4rem; position: relative; z-index: 10; }
+
+    /* =========================================
+       PROFILE HEADER & PREMIUM AVATAR
+       ========================================= */
+    .profile-header { display: flex; align-items: center; justify-content: center; gap: 2.5rem; margin-bottom: 4rem; flex-wrap: wrap; text-align: left; }
+    
+    /* Premium Avatar Glow Effect */
+    .avatar-wrapper { 
+      width: 140px; height: 140px; border-radius: 50%; background: var(--bg-surface); 
+      border: 2px solid rgba(255,255,255,0.2); padding: 8px; 
+      box-shadow: 0 0 40px rgba(56, 189, 248, 0.3), inset 0 0 20px rgba(0,0,0,0.8); 
+      display: flex; align-items: center; justify-content: center; position: relative;
+    }
+    .avatar-wrapper::after { content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.3); animation: spinMeter 10s linear infinite; }
+    @keyframes spinMeter { 100% { transform: rotate(360deg); } }
+    .avatar-wrapper svg { width: 100%; height: 100%; border-radius: 50%; }
+    
+    .eyebrow { color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 3px; font-size: 0.85rem; font-weight: 800; margin-bottom: 0.5rem; display: block; text-shadow: 0 0 10px rgba(56,189,248,0.5); }
+    .page-title { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; line-height: 1.1; margin-bottom: 0.5rem; color: #ffffff; letter-spacing: -1px; }
+    
+    /* =========================================
+       DASHBOARD GRID
+       ========================================= */
+    .dashboard-panel { background: var(--bg-glass); border: 1px solid var(--border-light); backdrop-filter: blur(24px); border-radius: 24px; padding: 3.5rem; margin-bottom: 5rem; box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05); }
+    .dashboard-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 4rem; }
+    
+    .verdict-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.5rem; }
+    .stream-result { font-size: 2.8rem; font-weight: 800; color: #ffffff; margin-bottom: 0.5rem; letter-spacing: -1px; line-height: 1.2;}
+    .archetype-tag { display: inline-block; padding: 0.4rem 1.2rem; border-radius: 50px; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2.5rem; border: 1px solid currentColor; }
+
+    .analysis-block { background: rgba(0,0,0,0.4); border-left: 4px solid var(--accent-purple); padding: 1.5rem 2rem; border-radius: 0 12px 12px 0; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.03); border-left: 4px solid var(--accent-purple); }
+    .analysis-text { color: var(--text-main); font-size: 1.05rem; line-height: 1.8; }
+    
+    /* Deep Psychometric Breakdown */
+    .deep-insights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    .insight-box { background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); border-radius: 12px; padding: 1.5rem; transition: transform 0.3s; }
+    .insight-box:hover { transform: translateY(-3px); background: rgba(255,255,255,0.04); }
+    .insight-title { font-size: 0.8rem; text-transform: uppercase; font-weight: 800; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+    .insight-item { font-size: 0.95rem; font-weight: 600; color: #fff; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px; }
+    .insight-item::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
+    .text-green { color: var(--accent-emerald); }
+    .text-red { color: var(--accent-pink); }
+    
+    /* Progress Bars */
+    .viz-header { font-size: 1.2rem; font-weight: 700; margin-bottom: 2rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; }
+    .metric-group { margin-bottom: 1.5rem; }
+    .metric-top { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 600; }
+    .metric-track { width: 100%; height: 8px; background: rgba(0,0,0,0.5); border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden; }
+    .metric-fill { height: 100%; border-radius: 10px; transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); width: 0%; box-shadow: 0 0 10px currentColor; }
+    
+    .bg-blue { background: var(--accent-cyan); color: var(--accent-cyan); }
+    .bg-purple { background: var(--accent-purple); color: var(--accent-purple); }
+    .bg-pink { background: var(--accent-pink); color: var(--accent-pink); }
+
+    /* =========================================
+       ROADMAP CARDS & 3-YEAR CUTOFFS
+       ========================================= */
+    .section-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 3rem; color: #ffffff; text-align: center; }
+    .roadmap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2.5rem; perspective: 1500px; }
+    
+    .path-card { background: var(--bg-glass); border: 1px solid var(--border-light); border-radius: 20px; padding: 2.5rem; display: flex; flex-direction: column; transition: 0.3s ease-out; box-shadow: 0 20px 40px rgba(0,0,0,0.4); transform-style: preserve-3d; }
+    .path-card:hover { transform: translateY(-8px) scale(1.01); border-color: rgba(255,255,255,0.2); box-shadow: 0 40px 80px rgba(0,0,0,0.8); }
+    
+    .path-badge { display: inline-block; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; padding: 0.3rem 1rem; border-radius: 50px; background: rgba(255,255,255,0.05); }
+    .path-title { font-size: 1.6rem; font-weight: 800; color: #ffffff; line-height: 1.3; margin-bottom: 0.5rem; }
+    .path-tags { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px dashed var(--border-light); }
+    
+    .timeline { position: relative; padding-left: 20px; margin-bottom: 2rem; flex-grow: 1;}
+    .timeline::before { content: ''; position: absolute; left: 4px; top: 5px; bottom: 5px; width: 2px; background: rgba(255,255,255,0.1); }
+    .timeline-item { position: relative; margin-bottom: 1rem; color: var(--text-main); font-size: 0.95rem; font-weight: 500; }
+    .timeline-item::before { content: ''; position: absolute; left: -21px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--bg-surface); border: 2px solid currentColor; box-shadow: 0 0 10px currentColor; }
+
+    /* Intelligence & Cutoff Box */
+    .intel-box { background: rgba(0,0,0,0.4); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.03); }
+    .intel-row { display: flex; flex-direction: column; gap: 0.2rem; }
+    .i-label { font-size: 0.75rem; text-transform: uppercase; font-weight: 800; color: var(--text-muted); letter-spacing: 1px; }
+    .i-val { font-weight: 700; font-size: 0.95rem; color: #fff; }
+    
+    .cutoff-box { background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 8px; border-left: 3px solid currentColor; margin-top: 0.5rem; }
+    .cutoff-title { font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 0.5rem; opacity: 0.8; }
+    .cutoff-data { font-family: monospace; font-size: 0.85rem; color: var(--text-main); line-height: 1.6; }
+
+    .btn-outline { width: 100%; padding: 1.2rem; border-radius: 10px; border: 1px solid; background: rgba(255,255,255,0.02); font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+    .btn-outline:hover { background: currentColor; color: #000 !important; box-shadow: 0 10px 30px currentColor; }
+
+    @media (max-width: 960px) {
+      .dashboard-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .profile-header { flex-direction: column; text-align: center; }
+      .deep-insights-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="particle-container" id="particleEngine"></div>
+
+  <header>
+    <nav class="nav">
+      <div class="logo">StreamSelector</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="quiz.html">Assessment</a>
+        <a href="result.html" style="color: #ffffff;">Diagnostic Report</a>
+      </div>
+    </nav>
+  </header>
+
+  <div id="errorState" style="display: none; text-align: center; padding: 15rem 0;">
+    <h2 style="font-size: 3rem; margin-bottom: 1rem;">No Data Found</h2>
+    <p style="color: #a1a1aa; margin-bottom: 2rem;">You must complete the Neural Calibration first.</p>
+    <a href="quiz.html" style="background: linear-gradient(90deg, #38bdf8, #c084fc); color: #fff; padding: 1rem 2rem; border-radius: 8px; font-weight: bold; text-decoration: none;">Start Assessment</a>
+  </div>
+
+  <main id="mainContent" style="display: none;">
+    
+    <div class="profile-header">
+      <div class="avatar-wrapper" id="userAvatar"></div>
+      <div>
+        <span class="eyebrow" id="topEyebrow">Confidential Analysis Complete</span>
+        <h1 class="page-title">Welcome, <span id="displayName">Student</span></h1>
+        <p class="page-sub">Here is your definitive career architecture based on deep psychometric analysis and historical cutoff data.</p>
+      </div>
+    </div>
+
+    <div class="dashboard-panel">
+      <div class="dashboard-grid">
+        
+        <div>
+          <div class="verdict-header">
+            <p class="verdict-label">Primary Recommendation</p>
+            <h2 class="stream-result" id="displayStream">--</h2>
+            <span class="archetype-tag" id="archetypeTag">--</span>
+          </div>
+          
+          <div class="analysis-block" id="analysisBlock">
+            <p class="analysis-text" id="reasonText">Analyzing metrics...</p>
+          </div>
+          
+          <div class="deep-insights-grid">
+            <div class="insight-box">
+              <p class="insight-title"><span style="color: var(--accent-emerald);">✦</span> Core Strengths</p>
+              <div id="strengthList"></div>
+            </div>
+            <div class="insight-box">
+              <p class="insight-title"><span style="color: var(--accent-pink);">✦</span> Development Areas</p>
+              <div id="weaknessList"></div>
+            </div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-light);">
+            <p style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Diagnostic Aggregates</p>
+            <div style="display: flex; gap: 3rem; margin-top: 0.5rem;">
+              <div><span style="font-size: 1.8rem; font-weight: 900; color: #fff;" id="totalAgg">0%</span><br><span style="font-size: 0.8rem; color: var(--text-muted);">Overall Accuracy</span></div>
+              <div><span style="font-size: 1.8rem; font-weight: 900; color: var(--accent-cyan);" id="coreAgg">0%</span><br><span style="font-size: 0.8rem; color: var(--text-muted);">Core Stream Match</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="viz-header">Aptitude Distribution</h3>
+
+          <div class="metric-group">
+            <div class="metric-top"><span>Empirical Logic (Math/Sci)</span> <span id="valEmpirical">0%</span></div>
+            <div class="metric-track"><div class="metric-fill bg-blue" id="barEmpirical" style="background: var(--accent-cyan); box-shadow: 0 0 15px var(--accent-cyan);"></div></div>
+          </div>
+
+          <div class="metric-group">
+            <div class="metric-top"><span>Language & Humanities</span> <span id="valLang">0%</span></div>
+            <div class="metric-track"><div class="metric-fill" id="barLang" style="background: var(--accent-purple); box-shadow: 0 0 15px var(--accent-purple);"></div></div>
+          </div>
+
+          <div class="metric-group">
+            <div class="metric-top"><span>Vocational Affinity Peak</span> <span id="valAff">0%</span></div>
+            <div class="metric-track"><div class="metric-fill" id="barAff" style="background: var(--accent-pink); box-shadow: 0 0 15px var(--accent-pink);"></div></div>
+          </div>
+
+          <div style="margin-top: 3rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem;">
+            <p style="font-size: 0.85rem; color: #fff; text-transform: uppercase; font-weight: 800; margin-bottom: 1rem; display:flex; align-items:center; gap:8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Algorithmic Logic Used
+            </p>
+            <ul style="list-style:none; padding:0; margin:0; font-size:0.9rem; color:var(--text-muted); line-height:1.6;" id="criteriaList">
+              </ul>
+          </div>
+          
+          <div style="margin-top: 1.5rem; padding: 1.5rem; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+            <p style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Stress Resilience Protocol</p>
+            <p id="stressText" style="font-size: 0.95rem; color: #fff; font-weight: 500;"></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <h2 class="section-title">Actionable Career Logistics</h2>
+    <div class="roadmap-grid" id="roadmapCards"></div>
+
+  </main>
+
+  <script>
+    // --- PREMIUM IMPRESSIVE AVATARS (GRADIENTS & DETAILED SVGS) ---
+    const AVATARS = {
+      PCM: {
+        Male: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pcmG" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#0ea5e9"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><circle cx="50" cy="50" r="50" fill="url(#pcmG)" opacity="0.15"/><circle cx="50" cy="35" r="16" fill="#fff"/><path d="M20 90c0-15 15-25 30-25s30 10 30 25" stroke="#fff" stroke-width="8" stroke-linecap="round"/><rect x="35" y="28" width="30" height="10" rx="4" fill="#0f172a"/><path d="M30 65l40 0" stroke="#38bdf8" stroke-width="4"/></svg>`,
+        Female: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pcmGF" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#0ea5e9"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs><circle cx="50" cy="50" r="50" fill="url(#pcmGF)" opacity="0.15"/><path d="M50 15c-15 0-22 10-22 22 0 10 10 15 22 15s22-5 22-15c0-12-7-22-22-22z" fill="#fff"/><path d="M20 90c0-15 15-25 30-25s30 10 30 25" stroke="#fff" stroke-width="8" stroke-linecap="round"/><rect x="35" y="28" width="30" height="8" rx="4" fill="#0f172a"/></svg>`
+      },
+      PCB: {
+        Male: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pcbG" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#059669"/></linearGradient></defs><circle cx="50" cy="50" r="50" fill="url(#pcbG)" opacity="0.15"/><circle cx="50" cy="35" r="16" fill="#fff"/><path d="M25 90c0-15 10-25 25-25s25 10 25 25" stroke="#fff" stroke-width="8" stroke-linecap="round"/><path d="M45 75h10v10H45z" fill="#10b981"/><path d="M50 70v20" stroke="#10b981" stroke-width="4"/></svg>`,
+        Female: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pcbGF" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#059669"/></linearGradient></defs><circle cx="50" cy="50" r="50" fill="url(#pcbGF)" opacity="0.15"/><path d="M50 15c-15 0-22 10-22 22 0 10 10 15 22 15s22-5 22-15c0-12-7-22-22-22z" fill="#fff"/><path d="M25 90c0-15 10-25 25-25s25 10 25 25" stroke="#fff" stroke-width="8" stroke-linecap="round"/><path d="M45 75h10v10H45z" fill="#10b981"/><path d="M50 70v20" stroke="#10b981" stroke-width="4"/></svg>`
+      },
+      Commerce: {
+        Male: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="comG" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ea580c"/></linearGradient></defs><circle cx="50" cy="50" r="50" fill="url(#comG)" opacity="0.15"/><circle cx="50" cy="35" r="16" fill="#fff"/><path d="M20 90l15-25h30l15 25" fill="#fff"/><path d="M50 65v25" stroke="#f59e0b" stroke-width="4"/><path d="M40 90l10-25 10 25" stroke="#05050f" stroke-width="4"/></svg>`,
+        Female: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="comGF" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ea580c"/></linearGradient></defs><circle cx="50" cy="50" r="50" fill="url(#comGF)" opacity="0.15"/><path d="M50 15c-15 0-22 10-22 22 0 10 10 15 22 15s22-5 22-15c0-12-7-22-22-22z" fill="#fff"/><path d="M20 90l15-25h30l15 25" fill="#fff"/><path d="M40 90l10-25 10 25" stroke="#05050f" stroke-width="4"/></svg>`
+      },
+      Arts: {
+        Male: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="artG" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#ec4899"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs><circle cx="50" cy="50" r="50" fill="url(#artG)" opacity="0.15"/><circle cx="50" cy="35" r="16" fill="#fff"/><path d="M20 90c0-15 15-25 30-25s30 10 30 25" stroke="#fff" stroke-width="8" stroke-linecap="round"/><circle cx="75" cy="70" r="10" fill="#ec4899"/><circle cx="25" cy="40" r="6" fill="#c084fc"/></svg>`,
+        Female: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="artGF" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#ec4899"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs><circle cx="50" cy="50" r="50" fill="url(#artGF)" opacity="0.15"/><path d="M50 15c-15 0-22 10-22 22 0 10 10 15 22 15s22-5 22-15c0-12-7-22-22-22z" fill="#fff"/><path d="M20 90c0-15 15-25 30-25s30 10 30 25" stroke="#fff" stroke-width="8" stroke-linecap="round"/><circle cx="75" cy="70" r="10" fill="#ec4899"/><circle cx="25" cy="40" r="6" fill="#c084fc"/></svg>`
+      }
+    };
+
+    // --- FUNCTION TO GENERATE THEMED PARTICLES ---
+    function generateParticles(themeColor) {
+      const pContainer = document.getElementById('particleEngine');
+      pContainer.innerHTML = ''; // clear any existing
+
+      // Tier 1: Huge Orbs (Using themeColor)
+      for(let i=0; i<8; i++) {
+        let orb = document.createElement('div');
+        orb.className = 'huge-orb';
+        orb.style.width = (Math.random() * 300 + 200) + 'px';
+        orb.style.height = orb.style.width;
+        orb.style.left = (Math.random() * 100) + 'vw';
+        orb.style.top = (Math.random() * 100) + 'vh';
+        orb.style.background = themeColor;
+        orb.style.animationDelay = '-' + (Math.random() * 20) + 's';
+        pContainer.appendChild(orb);
+      }
+
+      // Tier 2: Mid Nodes (Using themeColor)
+      for(let i=0; i<20; i++) {
+        let node = document.createElement('div');
+        node.className = 'mid-node';
+        node.style.width = (Math.random() * 10 + 5) + 'px';
+        node.style.height = node.style.width;
+        node.style.left = (Math.random() * 100) + 'vw';
+        node.style.top = (Math.random() * 100) + 'vh';
+        node.style.background = themeColor;
+        node.style.animationDelay = '-' + (Math.random() * 10) + 's';
+        pContainer.appendChild(node);
+      }
+
+      // Tier 3: Micro Stars (Using themeColor to tint the stars)
+      for(let i=0; i<80; i++) {
+        let star = document.createElement('div');
+        star.className = 'micro-star';
+        star.style.width = (Math.random() * 3 + 1) + 'px';
+        star.style.height = star.style.width;
+        star.style.left = (Math.random() * 100) + 'vw';
+        star.style.top = (Math.random() * 100) + 'vh';
+        star.style.background = themeColor;
+        star.style.boxShadow = `0 0 5px ${themeColor}`;
+        star.style.animationDelay = '-' + (Math.random() * 5) + 's';
+        pContainer.appendChild(star);
+      }
+    }
+
+    // --- DATA PROCESSING & LOGIC ---
+    const rawData = localStorage.getItem('streamResult');
+    if (!rawData) {
+      document.getElementById('errorState').style.display = "block";
+      generateParticles('#38bdf8'); // Default color for error state
+    } else {
+      document.getElementById('mainContent').style.display = "block";
+      const data = JSON.parse(rawData);
+      
+      const name = data.name || "Student";
+      const gender = data.gender || "Male";
+      const stream = data.stream || "Arts";
+      const interest = data.interest || "arts";
+      
+      document.getElementById('displayName').innerText = name;
+      
+      // Inject Avatar
+      document.getElementById('userAvatar').innerHTML = AVATARS[stream][gender] || AVATARS["Arts"]["Male"];
+      
+      // Calculate derived stats
+      const math = data.math || 60; const sci = data.science || 60;
+      const eng = data.english || 60; const sst = data.sst || 60; const hin = data.hindi || 60;
+      const stress = data.stress || 3;
+      
+      const totalAgg = Math.round((math + sci + eng + sst + hin) / 5);
+      const empirical = Math.round((math + sci) / 2);
+      const language = Math.round((eng + hin + sst) / 3);
+      
+      const affMax = Math.max(data.affMath||3, data.affTech||3, data.affArt||3, data.affBiz||3);
+      const affPct = (affMax / 5) * 100;
+
+      // Subject Sorting for Deep Analysis
+      const subjectObj = { "Mathematics": math, "Science": sci, "English": eng, "Social Studies": sst, "Hindi/Local": hin };
+      const sortedSubs = Object.entries(subjectObj).sort((a,b) => b[1] - a[1]);
+      
+      const str1 = sortedSubs[0]; const str2 = sortedSubs[1];
+      const weak1 = sortedSubs[4];
+
+      document.getElementById('strengthList').innerHTML = `
+        <span class="insight-item text-green">${str1[0]} (${str1[1]}/100)</span>
+        <span class="insight-item text-green">${str2[0]} (${str2[1]}/100)</span>
+      `;
+      document.getElementById('weaknessList').innerHTML = `
+        <span class="insight-item text-red">${weak1[0]} (${weak1[1]}/100)</span>
+        <span style="font-size:0.8rem; color:var(--text-muted); display:block; margin-top:5px;">Targeted focus required for competitive balance.</span>
+      `;
+
+      // Set Aggrigates
+      document.getElementById('totalAgg').innerText = totalAgg + "%";
+      document.getElementById('coreAgg').innerText = (stream === "PCM" || stream === "PCB") ? empirical + "%" : language + "%";
+
+      setTimeout(() => {
+        document.getElementById('barEmpirical').style.width = empirical + "%";
+        document.getElementById('valEmpirical').innerText = empirical + "/100";
+        document.getElementById('barLang').style.width = language + "%";
+        document.getElementById('valLang').innerText = language + "/100";
+        document.getElementById('barAff').style.width = affPct + "%";
+        document.getElementById('valAff').innerText = affPct + "%";
+      }, 500);
+
+      const titleEl = document.getElementById('displayStream');
+      const reasonEl = document.getElementById('reasonText');
+      const blockEl = document.getElementById('analysisBlock');
+      const archEl = document.getElementById('archetypeTag');
+      const stressEl = document.getElementById('stressText');
+      const criteriaList = document.getElementById('criteriaList');
+
+      let themeColor = "#ec4899";
+
+      if (stream === "PCM") {
+        themeColor = "#38bdf8"; titleEl.innerText = "Science (PCM)";
+        titleEl.style.color = themeColor; blockEl.style.borderColor = themeColor;
+        document.getElementById('topEyebrow').style.color = themeColor;
+        document.getElementById('coreAgg').style.color = themeColor;
+        archEl.innerText = "The Systems Architect"; archEl.style.color = themeColor; archEl.style.background = "rgba(56, 189, 248, 0.1)";
+        reasonEl.innerHTML = `<span style="color:#fff; font-weight:600;">Diagnostic Summary for ${name}:</span><br><br>Your exceptional score in ${str1[0]} (${str1[1]}/100) combined with a high technological affinity indicates a mind wired for algorithms, spatial design, and structural engineering. You excel in objective, rule-based systems rather than abstract theories.`;
+        
+        criteriaList.innerHTML = `
+          <li style="color:${themeColor}">Empirical Logic Average of ${empirical}% exceeds requirement for Engineering.</li>
+          <li style="color:${themeColor}">Primary Vocational Interest selected as "${interest.toUpperCase()}", prioritizing Tech over Biology.</li>
+          <li style="color:${themeColor}">Math/Tech Affinity Level matched to structural reasoning requirements.</li>
+        `;
+      } else if (stream === "PCB") {
+        themeColor = "#10b981"; titleEl.innerText = "Science (PCB)";
+        titleEl.style.color = themeColor; blockEl.style.borderColor = themeColor;
+        document.getElementById('topEyebrow').style.color = themeColor;
+        document.getElementById('coreAgg').style.color = themeColor;
+        archEl.innerText = "The Empirical Healer"; archEl.style.color = themeColor; archEl.style.background = "rgba(16, 185, 129, 0.1)";
+        reasonEl.innerHTML = `<span style="color:#fff; font-weight:600;">Diagnostic Summary for ${name}:</span><br><br>Your strong foundation in ${str1[0]} (${str1[1]}/100) and biological interests reveal a natural aptitude for empirical research. The data shows you possess the memory retention and care-oriented logic required for healthcare and clinical sciences.`;
+        
+        criteriaList.innerHTML = `
+          <li style="color:${themeColor}">Core Science score of ${sci}/100 triggered Medical pathway parameters.</li>
+          <li style="color:${themeColor}">Primary Vocational Interest explicitly selected as "${interest.toUpperCase()}".</li>
+          <li style="color:${themeColor}">Biology/Life Sciences Affinity confirmed at Level ${data.affBio || 3}/5.</li>
+        `;
+      } else if (stream === "Commerce") {
+        themeColor = "#f59e0b"; titleEl.innerText = "Commerce & Finance";
+        titleEl.style.color = themeColor; blockEl.style.borderColor = themeColor;
+        document.getElementById('topEyebrow').style.color = themeColor;
+        document.getElementById('coreAgg').style.color = themeColor;
+        archEl.innerText = "The Strategic Optimizer"; archEl.style.color = themeColor; archEl.style.background = "rgba(245, 158, 11, 0.1)";
+        reasonEl.innerHTML = `<span style="color:#fff; font-weight:600;">Diagnostic Summary for ${name}:</span><br><br>Combining your analytical skills (${empirical} avg) with a dominant Business Affinity creates the perfect hybrid profile. You process information in a way that is highly conducive to macro-economics, risk modeling, and enterprise leadership.`;
+        
+        criteriaList.innerHTML = `
+          <li style="color:${themeColor}">Business/Finance Affinity recorded at peak levels (${data.affBiz || 3}/5).</li>
+          <li style="color:${themeColor}">Math score of ${math}/100 provides strong foundation for Financial Modeling.</li>
+          <li style="color:${themeColor}">Primary Interest aligned directly with Commerce Sector.</li>
+        `;
+      } else {
+        themeColor = "#ec4899"; titleEl.innerText = "Arts & Humanities";
+        titleEl.style.color = themeColor; blockEl.style.borderColor = themeColor;
+        document.getElementById('topEyebrow').style.color = themeColor;
+        document.getElementById('coreAgg').style.color = themeColor;
+        archEl.innerText = "The Abstract Visionary"; archEl.style.color = themeColor; archEl.style.background = "rgba(236, 72, 153, 0.1)";
+        reasonEl.innerHTML = `<span style="color:#fff; font-weight:600;">Diagnostic Summary for ${name}:</span><br><br>Your superior linguistic processing (${eng}/100 in English) points to high emotional intelligence and abstract reasoning. You thrive in creative, legal, or administrative domains where lateral problem-solving is prioritized over rigid equations.`;
+        
+        criteriaList.innerHTML = `
+          <li style="color:${themeColor}">Linguistic Processing Average of ${language}% dominated numerical scores.</li>
+          <li style="color:${themeColor}">Creative/Arts Affinity multiplier outweighed empirical thresholds.</li>
+          <li style="color:${themeColor}">Stress Resilience profile optimized for continuous assessment pathways.</li>
+        `;
+      }
+
+      // Generate the background particles using the exact theme color
+      generateParticles(themeColor);
+
+      // Stress Logic
+      if(stress <= 2) { stressEl.innerText = "High threshold. Capable of enduring rigorous, single-day competitive exams (JEE/NEET)."; stressEl.style.color = "var(--accent-emerald)"; }
+      else if(stress === 3) { stressEl.innerText = "Moderate threshold. Best suited for balanced testing environments (CUET, NATA)."; stressEl.style.color = "var(--accent-gold)"; }
+      else { stressEl.innerText = "Pressure sensitive. Prioritize pathways evaluating success through portfolios & consistency."; stressEl.style.color = "var(--accent-pink)"; }
+
+      // --- MASSIVE IN-DEPTH LOGISTICAL DATABASE (WITH 3-YEAR CUTOFFS) ---
+      const DATABASE = {
+        PCM: [
+          { title: "B.Tech Computer Science", tag: "Engineering • Software", steps: ["PCM in 12th", "Clear JEE Main/Adv", "4-Year B.Tech"], exam: "JEE Main & Adv", date: "Jan/Apr", cutoffs: "2023: 90.7%ile | 2024: 93.2%ile | 2025: 94.1%ile", cost: "₹4L-15L", salary: "₹8L - ₹24L+", link: "https://jeemain.nta.ac.in/" },
+          { title: "Architecture (B.Arch)", tag: "Design • Spatial", steps: ["PCM in 12th", "Clear NATA Exam", "5-Year B.Arch"], exam: "NATA", date: "Apr-July", cutoffs: "2023: 115/200 | 2024: 120/200 | 2025: 125/200", cost: "₹6L-12L", salary: "₹6L - ₹15L+", link: "https://www.nata.in/" },
+          { title: "Data Science & AI", tag: "Analytics • ML", steps: ["Math in 12th", "Clear CUET", "B.Sc/BCA in Data"], exam: "CUET UG", date: "May", cutoffs: "2023: 98%ile | 2024: 99%ile | 2025: 99.2%ile", cost: "₹3L-8L", salary: "₹7L - ₹20L+", link: "https://cuet.samarth.ac.in/" },
+          { title: "Commercial Pilot", tag: "Aviation • Defense", steps: ["Physics & Math in 12th", "DGCA Medicals", "Flying School"], exam: "NDA / DGCA", date: "Quarterly", cutoffs: "Class 1 Medical Fitness Required", cost: "₹40L - ₹50L", salary: "₹15L - ₹35L+", link: "https://dgca.gov.in/" }
+        ],
+        PCB: [
+          { title: "MBBS & Surgery", tag: "Doctor • Clinical", steps: ["PCB in 12th", "Crack NEET UG", "5.5-yr MBBS + MD"], exam: "NEET UG", date: "May", cutoffs: "2023: 610/720 | 2024: 640/720 | 2025: 655/720", cost: "Govt: ₹50K | Pvt: ₹50L+", salary: "₹12L - ₹30L+", link: "https://neet.nta.nic.in/" },
+          { title: "B.Pharma / R&D", tag: "Medicines • Research", steps: ["PCB in 12th", "State CETs", "4-Year B.Pharma"], exam: "State CET", date: "May-July", cutoffs: "Top 80-85 Percentile Avg.", cost: "₹4L-8L", salary: "₹5L - ₹12L+", link: "https://www.pci.nic.in/" },
+          { title: "Nursing / Allied Health", tag: "Healthcare • Care", steps: ["PCB in 12th", "AIIMS/State Exams", "B.Sc Nursing"], exam: "AIIMS B.Sc", date: "June", cutoffs: "2023: 55 Rank | 2024: 60 Rank (Gen)", cost: "₹2L-5L", salary: "₹4L - ₹9L+", link: "https://www.indiannursingcouncil.org/" },
+          { title: "Biotech & Genetics", tag: "Lab • Future Tech", steps: ["Biology strong focus", "CUET Exam", "B.Sc + M.Sc Biotech"], exam: "CUET UG", date: "May", cutoffs: "Top 90-95 Percentile", cost: "₹3L-6L", salary: "₹6L - ₹15L", link: "https://cuet.samarth.ac.in/" }
+        ],
+        Commerce: [
+          { title: "Chartered Accountant", tag: "ICAI • Finance", steps: ["Commerce with Math", "CA Foundation", "Articleship & Final"], exam: "CA Foundation", date: "May/Nov", cutoffs: "Consistent 15-20% Pass Rate", cost: "₹1L-2L (High ROI)", salary: "₹9L - ₹25L+", link: "https://www.icai.org/" },
+          { title: "BBA to MBA (IIMs)", tag: "Management • Corporate", steps: ["12th Marks Focus", "IPMAT/CUET", "BBA then CAT exam"], exam: "CAT (PG)", date: "November", cutoffs: "2023: 98%ile | 2024: 99%ile | 2025: 99.5%ile", cost: "₹15L-25L", salary: "₹15L - ₹40L+", link: "https://iimcat.ac.in/" },
+          { title: "Actuarial Science", tag: "Risk • High Math", steps: ["Core Math in 12th", "ACET Exam", "Clear 13 Papers"], exam: "ACET", date: "Bi-annual", cutoffs: "Strict 50% Passing Mark", cost: "₹2L-3L", salary: "₹12L - ₹35L+", link: "https://actuariesindia.org/" },
+          { title: "Company Secretary", tag: "Law • Governance", steps: ["Register CSEET", "Exec & Professional level", "Corporate Training"], exam: "CSEET", date: "Quarterly", cutoffs: "Minimum 50% Aggregate", cost: "₹1L", salary: "₹7L - ₹18L+", link: "https://www.icsi.edu/" }
+        ],
+        Arts: [
+          { title: "Corporate Law (BA LL.B)", tag: "NLU • Legal", steps: ["Humanities in 12th", "Crack CLAT", "5-Yr Integrated Law"], exam: "CLAT", date: "Dec", cutoffs: "2023: 92/120 | 2024: 95/120 | 2025: 98/120", cost: "₹10L-15L", salary: "₹8L - ₹25L+", link: "https://consortiumofnlus.ac.in/" },
+          { title: "Civil Services (UPSC)", tag: "IAS/IPS • Govt", steps: ["BA Degree", "Current Affairs Focus", "Clear Prelims/Mains"], exam: "UPSC CSE", date: "May", cutoffs: "Approx 45-50% for Prelims selection", cost: "₹1L-2L", salary: "Elite Govt Scale", link: "https://upsc.gov.in/" },
+          { title: "Design (B.Des)", tag: "UI/UX • Product", steps: ["Portfolio prep", "UCEED/NID Exams", "4-Yr Design Degree"], exam: "NID / UCEED", date: "Jan", cutoffs: "Top Ranks Nationwide", cost: "₹10L+", salary: "₹7L - ₹20L+", link: "https://www.uceed.iitb.ac.in/" },
+          { title: "Psychology", tag: "Therapy • Clinical", steps: ["Arts/Science in 12th", "CUET for Top Unis", "BA + MA + RCI License"], exam: "CUET UG", date: "May", cutoffs: "95-99%ile for Top Central Unis", cost: "₹2L-6L", salary: "₹5L - ₹15L", link: "https://cuet.samarth.ac.in/" }
+        ]
+      };
+
+      const paths = DATABASE[stream];
+      const gridEl = document.getElementById('roadmapCards');
+
+      paths.forEach((item, idx) => {
+        const card = document.createElement('article');
+        card.className = "path-card";
+        card.innerHTML = `
+          <div class="path-header">
+            <span class="path-badge" style="color: ${themeColor}; background: ${themeColor}15; border: 1px solid ${themeColor};">Pathway 0${idx + 1}</span>
+            <h3 class="path-title">${item.title}</h3>
+            <span class="path-tags">${item.tag}</span>
+          </div>
+          <div class="path-body">
+            <ul class="timeline">
+              ${item.steps.map(step => `<li class="timeline-item" style="color: ${themeColor}">${step}</li>`).join("")}
+            </ul>
+            <div class="intel-box">
+              <div class="intel-row"><span class="i-label">Primary Exam</span><span class="i-val" style="color:${themeColor}">${item.exam}</span></div>
+              <div class="intel-row"><span class="i-label">Timeline</span><span class="i-val">${item.date}</span></div>
+              
+              <div class="cutoff-box" style="color: ${themeColor}">
+                <div class="cutoff-title">3-Year Cutoff Trend</div>
+                <div class="cutoff-data">${item.cutoffs}</div>
+              </div>
+
+              <div class="intel-row" style="margin-top:0.5rem; border-top:1px dashed rgba(255,255,255,0.1); padding-top:0.5rem;">
+                <span class="i-label">Est. Cost</span><span class="i-val" style="color:var(--text-muted)">${item.cost}</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:1.5rem; background:rgba(255,255,255,0.05); padding:1rem; border-radius:8px;">
+            <div><span style="font-size:0.75rem; color:var(--text-muted); display:block; text-transform:uppercase; letter-spacing:1px;">Entry Salary</span><strong style="color:var(--accent-emerald); font-size:1.1rem;">${item.salary}</strong></div>
+            <button class="btn-outline" style="width:auto; padding:0.5rem 1.5rem; border-color:${themeColor}; color:${themeColor}">View Portal</button>
+          </div>
+        `;
+        
+        card.querySelector('.btn-outline').addEventListener('click', () => { window.open(item.link, '_blank'); });
+        
+        // Dynamic hover logic for buttons
+        card.querySelector('.btn-outline').addEventListener('mouseover', function() {
+          this.style.background = themeColor;
+          this.style.color = '#000';
+          this.style.boxShadow = `0 10px 30px ${themeColor}66`;
+        });
+        card.querySelector('.btn-outline').addEventListener('mouseout', function() {
+          this.style.background = `rgba(255,255,255,0.02)`;
+          this.style.color = themeColor;
+          this.style.boxShadow = 'none';
+        });
+
+        gridEl.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>

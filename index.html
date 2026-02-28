@@ -1,0 +1,386 @@
+\<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>StreamSelector • Career Guide After 10th</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Reset & Base Styles */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body { background: radial-gradient(circle at 15% 50%, #130a2b, #050508); color: #ffffff; overflow-x: hidden; line-height: 1.6; }
+
+    /* Anti-Gravity Floating Background Elements */
+    .bg-elements { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden; pointer-events: none; }
+    .float-shape { position: absolute; border-radius: 50%; filter: blur(80px); animation: drift linear infinite alternate; }
+    .shape-1 { width: 400px; height: 400px; background: rgba(56, 189, 248, 0.12); top: -10%; left: -10%; animation-duration: 20s; }
+    .shape-2 { width: 500px; height: 500px; background: rgba(236, 72, 153, 0.12); bottom: -20%; right: -10%; animation-duration: 25s; }
+    .shape-3 { width: 300px; height: 300px; background: rgba(139, 92, 246, 0.12); top: 40%; left: 40%; animation-duration: 22s; }
+
+    @keyframes drift {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(60px, -60px) scale(1.15); }
+    }
+
+    /* Navigation - Glassmorphism */
+    header { position: fixed; width: 100%; top: 0; z-index: 100; background: rgba(10, 10, 15, 0.7); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; }
+    .logo { font-weight: 900; font-size: 1.5rem; background: linear-gradient(90deg, #38bdf8, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
+    .nav-links a { color: #a1a1aa; text-decoration: none; margin-left: 2rem; font-weight: 500; transition: color 0.3s ease; }
+    .nav-links a:hover { color: #ffffff; }
+
+    /* Hero Section */
+    main { max-width: 1200px; margin: 0 auto; padding: 8rem 2rem 4rem; }
+    .hero { display: flex; align-items: center; justify-content: space-between; gap: 4rem; min-height: 80vh; }
+    .hero-text { flex: 1; z-index: 10; }
+    .eyebrow { color: #38bdf8; text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; }
+    .hero-text h1 { font-size: clamp(2.5rem, 5vw, 4.2rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+    .hero-text h1 span { background: linear-gradient(90deg, #ec4899, #8b5cf6, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: textShine 4s linear infinite; }
+    
+    @keyframes textShine { to { background-position: 200% center; } }
+
+    .hero-text > p { color: #a1a1aa; font-size: 1.1rem; max-width: 500px; margin-bottom: 2.5rem; }
+    .hero-badges { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+    .badge { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.8rem; color: #e4e4e7; backdrop-filter: blur(4px); }
+
+    /* Buttons */
+    .hero-actions { display: flex; gap: 1rem; }
+    button { cursor: pointer; font-weight: 700; padding: 1rem 2rem; border-radius: 8px; border: none; transition: all 0.3s ease; font-size: 1rem; }
+    .btn-primary { background: linear-gradient(90deg, #38bdf8, #8b5cf6); color: white; box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4); }
+    .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 30px rgba(139, 92, 246, 0.6); }
+    .btn-ghost { background: transparent; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.2); }
+    .btn-ghost:hover { background: rgba(255, 255, 255, 0.05); border-color: #ffffff; }
+
+    /* =========================================
+       UPGRADED 3D "FUTURE YOU" CORE SYSTEM
+       ========================================= */
+    .parallax-container { flex: 1.2; display: flex; justify-content: center; align-items: center; perspective: 1200px; }
+    
+    .hero-orbit {
+      position: relative;
+      width: 450px;
+      height: 450px;
+      transform-style: preserve-3d;
+      transform: rotateX(15deg) rotateY(-15deg);
+      transition: transform 0.1s ease-out;
+    }
+
+    /* Dynamic Rotating Rings */
+    .ring {
+      position: absolute;
+      top: 50%; left: 50%;
+      border-radius: 50%;
+      transform-style: preserve-3d;
+      pointer-events: none;
+    }
+
+    .ring-1 { 
+      width: 280px; height: 280px; 
+      margin: -140px 0 0 -140px; 
+      border: 1px solid rgba(56, 189, 248, 0.1); 
+      border-top: 2px solid #38bdf8; 
+      animation: spin3D 8s linear infinite; 
+    }
+    
+    .ring-2 { 
+      width: 380px; height: 380px; 
+      margin: -190px 0 0 -190px; 
+      border: 1px solid rgba(236, 72, 153, 0.1); 
+      border-bottom: 2px solid #ec4899; 
+      animation: spin3DReverse 12s linear infinite; 
+    }
+    
+    .ring-3 { 
+      width: 480px; height: 480px; 
+      margin: -240px 0 0 -240px; 
+      border: 1px dashed rgba(139, 92, 246, 0.2); 
+      border-left: 2px solid #8b5cf6; 
+      animation: spin3D 18s linear infinite; 
+    }
+
+    @keyframes spin3D { 100% { transform: rotateZ(360deg) rotateX(10deg); } }
+    @keyframes spin3DReverse { 100% { transform: rotateZ(-360deg) rotateY(10deg); } }
+
+    /* Pulsing Energy Core */
+    .orbit-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) translateZ(40px);
+      width: 130px; height: 130px;
+      background: radial-gradient(circle at 30% 30%, #fbcfe8, #ec4899, #8b5cf6, #312e81);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: white;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+      box-shadow: 0 0 50px rgba(236, 72, 153, 0.6), inset 0 0 20px rgba(255,255,255,0.6);
+      animation: corePulse 3s infinite alternate ease-in-out;
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    @keyframes corePulse {
+      0% { transform: translate(-50%, -50%) translateZ(40px) scale(0.95); box-shadow: 0 0 40px rgba(236, 72, 153, 0.4), inset 0 0 15px rgba(255,255,255,0.4); }
+      100% { transform: translate(-50%, -50%) translateZ(40px) scale(1.05); box-shadow: 0 0 70px rgba(139, 92, 246, 0.8), inset 0 0 25px rgba(255,255,255,0.8); }
+    }
+
+    /* Floating Stream Nodes */
+    .orbit-dot {
+      position: absolute;
+      background: rgba(15, 15, 25, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      padding: 1rem 1.5rem;
+      border-radius: 16px;
+      width: 230px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .orbit-dot:hover {
+      border-color: rgba(255,255,255,0.3);
+      box-shadow: 0 15px 45px rgba(56, 189, 248, 0.2);
+    }
+
+    .dot-label { font-weight: 800; font-size: 1.1rem; margin-bottom: 0.25rem; letter-spacing: 0.5px; }
+    .dot-tag { font-size: 0.8rem; color: #a1a1aa; font-weight: 500; }
+
+    /* Node Positioning & Independent Hover Physics */
+    .dot-science { top: -5%; left: -15%; animation: floatNode 4s infinite alternate ease-in-out; }
+    .dot-commerce { bottom: -5%; right: -20%; animation: floatNode 5s infinite alternate-reverse ease-in-out; }
+    .dot-arts { bottom: 15%; left: -25%; animation: floatNode 6s infinite alternate ease-in-out; }
+
+    .dot-science .dot-label { color: #38bdf8; }
+    .dot-commerce .dot-label { color: #ec4899; }
+    .dot-arts .dot-label { color: #8b5cf6; }
+
+    @keyframes floatNode {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-15px) rotate(2deg); }
+    }
+
+    /* How it works section - Glassmorphism Cards */
+    #how { margin-top: 6rem; text-align: center; position: relative; z-index: 10; }
+    #how h2 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .section-sub { color: #a1a1aa; margin-bottom: 3rem; }
+    .quiz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .card.glass { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(16px); padding: 2.5rem; border-radius: 16px; text-align: left; transition: transform 0.3s ease, background 0.3s ease; }
+    .card.glass:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.06); }
+    .pill { display: inline-block; background: rgba(56, 189, 248, 0.15); color: #38bdf8; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.75rem; font-weight: 800; margin-bottom: 1.2rem; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .pill-soft { background: rgba(236, 72, 153, 0.15); color: #ec4899; border-color: rgba(236, 72, 153, 0.3); }
+    .card h3 { font-size: 1.4rem; margin-bottom: 1rem; }
+    .about-text { color: #a1a1aa; font-size: 0.95rem; }
+
+    /* Footer */
+    footer { text-align: center; padding: 3rem; color: #52525b; font-size: 0.9rem; margin-top: 4rem; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+
+    /* =========================================
+       MOBILE RESPONSIVENESS (UPDATED)
+       ========================================= */
+    @media (max-width: 960px) {
+      .hero { flex-direction: column; text-align: center; padding-top: 4rem; }
+      .hero-text > p, .hero-badges, .hero-actions { margin-left: auto; margin-right: auto; justify-content: center; }
+      .parallax-container { perspective: none; margin-top: 4rem; }
+      .hero-orbit { width: 100%; max-width: 350px; height: 350px; transform: none !important; }
+      .ring-3 { display: none; } /* Hide outer ring on mobile to save space */
+    }
+
+    /* Ultra-Small / Standard Phone Screens */
+    @media (max-width: 600px) {
+      /* Navbar Stacking */
+      header { padding: 1rem; }
+      .nav { flex-direction: column; gap: 1rem; }
+      .nav-links { display: flex; gap: 1.5rem; margin: 0; }
+      .nav-links a { margin-left: 0; font-size: 0.95rem; }
+
+      /* Adjust Hero Spacing */
+      main { padding: 9rem 1.5rem 2rem; }
+      .hero-text h1 { font-size: 2.2rem; }
+      
+      /* Full Width Buttons */
+      .hero-actions { flex-direction: column; width: 100%; }
+      button { width: 100%; justify-content: center; }
+
+      /* Scale down the 3D Orbit */
+      .hero-orbit { max-width: 260px; height: 260px; margin-top: 1rem; }
+      .orbit-center { width: 90px; height: 90px; font-size: 1rem; }
+
+      /* Shrink floating cards so they don't overflow horizontally */
+      .orbit-dot { width: 140px; padding: 0.8rem; border-radius: 12px; }
+      .dot-label { font-size: 0.9rem; }
+      .dot-tag { font-size: 0.75rem; }
+
+      /* Bring cards tighter into the center */
+      .dot-science { top: -10%; left: -5%; }
+      .dot-commerce { bottom: 5%; right: -10%; }
+      .dot-arts { bottom: -15%; left: 5%; }
+
+      /* Fix Grid sizing */
+      .quiz-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .card.glass { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="bg-elements">
+    <div class="float-shape shape-1"></div>
+    <div class="float-shape shape-2"></div>
+    <div class="float-shape shape-3"></div>
+  </div>
+
+  <header>
+    <nav class="nav">
+      <div class="logo">StreamSelector</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="quiz.html">Quiz</a>
+        <a href="result.html">Roadmap</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">Career clarity for students</p>
+        <h1>Confused after <span>10th?</span><br />We map your future.</h1>
+        <p>
+          Drop the stress. We help you choose between Science, Commerce, and Arts using a data-driven quiz and visual roadmap tailored just for you.
+        </p>
+
+        <div class="hero-badges">
+          <div class="badge">🇮🇳 For Indian Students</div>
+          <div class="badge">🧠 AI Logic Engine</div>
+          <div class="badge">🗺️ Interactive Roadmap</div>
+        </div>
+
+        <div class="hero-actions">
+          <a href="quiz.html">
+            <button class="btn-primary">Start the Quiz →</button>
+          </a>
+          <button class="btn-ghost" onclick="document.querySelector('#how').scrollIntoView({behavior:'smooth'})">
+            How it works
+          </button>
+        </div>
+      </div>
+
+      <div class="parallax-container">
+        <div class="hero-orbit">
+          <div class="ring ring-1"></div>
+          <div class="ring ring-2"></div>
+          <div class="ring ring-3"></div>
+
+          <div class="orbit-center">Future<br />You</div>
+          
+          <div class="orbit-dot dot-science" data-depth="60">
+            <div class="dot-label">🔬 Science</div>
+            <div class="dot-tag">Engineering, AI, Medicine</div>
+          </div>
+          
+          <div class="orbit-dot dot-commerce" data-depth="30">
+            <div class="dot-label">📈 Commerce</div>
+            <div class="dot-tag">Finance, Startups, CA</div>
+          </div>
+          
+          <div class="orbit-dot dot-arts" data-depth="50">
+            <div class="dot-label">🎨 Arts</div>
+            <div class="dot-tag">Law, UPSC, Design</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <h2>How this website works</h2>
+      <p class="section-sub">Three simple steps to move from confusion to clarity.</p>
+
+      <div class="quiz-grid">
+        <div class="card glass">
+          <span class="pill">Step 1</span>
+          <h3>Answer a quick quiz</h3>
+          <p class="about-text">
+            Input your academic marks, genuine interests, and comfort level with exams. It takes less than 60 seconds.
+          </p>
+        </div>
+
+        <div class="card glass">
+          <span class="pill pill-soft">Step 2</span>
+          <h3>Get your best stream</h3>
+          <p class="about-text">
+            Our logic engine analyzes your profile and suggests Science, Commerce, or Arts, complete with a confidence score.
+          </p>
+        </div>
+        
+        <div class="card glass">
+          <span class="pill" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.3);">Step 3</span>
+          <h3>See a visual roadmap</h3>
+          <p class="about-text">
+            Unlock three detailed career paths for your suggested stream, including college courses and future job roles.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    StreamSelector • Built to empower students • HTML, CSS, & JS
+  </footer>
+
+  <script>
+    // Advanced 3D Parallax Tracker for the Energy Core System
+    const container = document.querySelector(".parallax-container");
+    const orbit = document.querySelector(".hero-orbit");
+    const dots = document.querySelectorAll(".orbit-dot");
+
+    // Only run complex 3D tracking on non-touch devices
+    const prefersCoarse = window.matchMedia("(pointer: coarse)").matches;
+
+    if (container && !prefersCoarse) {
+      container.addEventListener("mousemove", (e) => {
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const midX = rect.width / 2;
+        const midY = rect.height / 2;
+
+        // Calculate a smooth 3D tilt based on mouse position
+        const rotateY = ((x - midX) / midX) * 20;
+        const rotateX = ((midY - y) / midY) * -20;
+
+        orbit.style.transition = "transform 0.1s ease-out";
+        orbit.style.transform = `rotateX(${rotateX + 10}deg) rotateY(${rotateY - 10}deg)`;
+
+        // Make the floating cards heavily react to depth
+        dots.forEach(dot => {
+          const depth = parseInt(dot.dataset.depth || "40", 10);
+          const moveX = ((x - midX) / midX) * (depth / 3);
+          const moveY = ((y - midY) / midY) * (depth / 3);
+          
+          dot.style.transform = `translate3d(${moveX}px, ${moveY}px, ${depth}px)`;
+        });
+      });
+
+      // Reset positions to idle animation state when mouse leaves
+      container.addEventListener("mouseleave", () => {
+        orbit.style.transition = "transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)";
+        orbit.style.transform = "rotateX(15deg) rotateY(-15deg)";
+        
+        dots.forEach(dot => {
+          dot.style.transition = "transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)";
+          dot.style.transform = "translate3d(0, 0, 0)";
+        });
+        
+        // Remove the inline transition so the CSS keyframe floats can take over again
+        setTimeout(() => {
+          dots.forEach(dot => dot.style.transition = "");
+        }, 800);
+      });
+    }
+  </script>
+</body>
+</html>
