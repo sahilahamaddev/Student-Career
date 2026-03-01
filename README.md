@@ -19,7 +19,7 @@ creenshot 2026-03-01 at 10 31 07 AM" src="https://github.com/user-attachments/
 ## ✨ The Vision
 **StreamSelector** is a high-performance **Neural Diagnostic Engine** built to eliminate career confusion. Designed for the high-pressure Indian education landscape, it uses mathematical weighted modeling to analyze academic performance against psychometric affinities, delivering a 100% actionable career roadmap and university dossier.
 
-🚀 **[EXPLORE THE LIVE EXPERIENCE](https://studentcareerpath.netlify.app)**
+🚀 **[EXPLORE THE LIVE EXPERIENCE](https://student-career-ten.vercel.app/)**
 
 ---
 
