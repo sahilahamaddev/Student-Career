@@ -1,293 +1,331 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>StreamSelector • Access Terminal</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StreamSelector | Secure Access</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   
   <style>
-    /* =========================================
-       PREMIUM EXECUTIVE THEME
-       ========================================= */
-    :root {
-      --bg-base: #05050f; --bg-surface: #13131f; --bg-glass: rgba(15, 15, 25, 0.75);
-      --border-light: rgba(255, 255, 255, 0.08); --text-main: #f8fafc; --text-muted: #94a3b8;
-      --accent-cyan: #38bdf8; --accent-purple: #c084fc; --accent-pink: #ec4899;
-    }
-
+    /* --- RESET & BASE --- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; min-height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-    h1, h2, h3, h4, .logo { font-family: 'Poppins', sans-serif; }
+    body, html { width: 100%; height: 100%; overflow: hidden; background-color: #030712; font-family: 'Inter', sans-serif; color: #f3f4f6; }
     
-    /* Fade In Animation */
-    body { opacity: 0; animation: fadeIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-    @keyframes fadeIn { 0% { opacity: 0; transform: scale(1.05); filter: blur(10px); } 100% { opacity: 1; transform: scale(1); filter: blur(0); } }
+    /* --- INTERACTIVE CANVAS BACKGROUND --- */
+    #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: auto; }
 
-    /* =========================================
-       MASSIVE 3D PARTICLE ENGINE
-       ========================================= */
-    .particle-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; perspective: 1200px; background: radial-gradient(circle at 50% 50%, #0a0a16 0%, #020205 100%); pointer-events: none; }
-    .huge-orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.3; animation: floatHuge 25s linear infinite alternate; }
-    .mid-node { position: absolute; border-radius: 50%; filter: blur(3px); opacity: 0.6; animation: floatMid 15s ease-in-out infinite alternate; }
-    .micro-star { position: absolute; background: #fff; border-radius: 50%; opacity: 0.8; animation: twinkle 4s infinite alternate; box-shadow: 0 0 5px #fff; }
+    /* --- LAYOUT --- */
+    .container { position: relative; z-index: 10; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; perspective: 1200px; pointer-events: none; }
 
-    @keyframes floatHuge { 0% { transform: translate3d(0, 0, -300px) rotate(0deg); } 100% { transform: translate3d(80px, -80px, 100px) rotate(15deg); } }
-    @keyframes floatMid { 0% { transform: translate3d(0, 0, 0px) scale(1); } 100% { transform: translate3d(-60px, 60px, 200px) scale(1.5); } }
-    @keyframes twinkle { 0% { opacity: 0.1; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1.2); } }
-
-    /* =========================================
-       NAVIGATION
-       ========================================= */
-    header { width: 100%; padding: 20px 5%; z-index: 100; position: fixed; top: 0; background: transparent; }
-    .nav { display: flex; justify-content: center; align-items: center; max-width: 1200px; margin: 0 auto; }
-    .logo { font-weight: 800; font-size: 1.8rem; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; }
-
-    /* =========================================
-       LOGIN TERMINAL CONTAINER
-       ========================================= */
-    main { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; z-index: 10; padding: 0 20px; perspective: 1200px; }
-
-    /* The glowing spinning ring behind the card */
-    .auth-wrapper { position: relative; width: 100%; max-width: 420px; transform-style: preserve-3d; transition: transform 0.1s ease-out; }
-    .auth-wrapper::before { content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 24px; background: conic-gradient(var(--accent-cyan), var(--accent-purple), transparent 50%, var(--accent-cyan)); animation: spinGradient 4s linear infinite; z-index: -1; filter: blur(10px); opacity: 0.7; }
-    @keyframes spinGradient { 100% { transform: rotate(360deg); } }
-
-    .auth-card { background: var(--bg-glass); border: 1px solid rgba(255,255,255,0.1); border-top: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(24px); border-radius: 20px; padding: 3rem 2.5rem; box-shadow: 0 30px 60px rgba(0,0,0,0.8); position: relative; overflow: hidden; }
-    
-    /* Sweeping scanner line */
-    .scanline { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent-cyan); box-shadow: 0 0 15px var(--accent-cyan); animation: scan 4s linear infinite; z-index: 10; opacity: 0.5; }
-    @keyframes scan { 0% { top: 0%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
-
-    /* Typography */
-    .auth-title { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; text-align: center; }
-    .auth-sub { color: var(--text-muted); font-size: 0.95rem; text-align: center; margin-bottom: 2.5rem; }
-
-    /* Floating Label Inputs */
-    .input-group { position: relative; margin-bottom: 1.8rem; }
-    .input-group input { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border-light); color: #fff; padding: 1.2rem 1rem 0.6rem; border-radius: 10px; font-size: 1rem; outline: none; transition: 0.3s; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
-    .input-group label { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.95rem; transition: 0.3s; pointer-events: none; }
-    
-    /* Trigger float on focus or when valid (has text) */
-    .input-group input:focus, .input-group input:valid { border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(56, 189, 248, 0.2), inset 0 2px 5px rgba(0,0,0,0.5); background: rgba(0,0,0,0.6); }
-    .input-group input:focus + label, .input-group input:valid + label { top: 10px; font-size: 0.7rem; color: var(--accent-cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-
-    /* Buttons */
-    .btn-primary { width: 100%; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)); color: white; border: none; padding: 1.2rem; border-radius: 10px; font-size: 1.05rem; font-weight: 800; cursor: pointer; box-shadow: 0 10px 30px rgba(192, 132, 252, 0.3); text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; margin-top: 0.5rem; }
-    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(192, 132, 252, 0.6); }
-
-    .social-login { display: flex; gap: 1rem; margin-top: 1.5rem; }
-    .btn-social { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border-light); color: var(--text-main); padding: 0.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.9rem; }
-    .btn-social:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
-
-    /* Toggle Forms */
-    .auth-forms { position: relative; overflow: hidden; }
-    .form-pane { transition: 0.4s ease-in-out; width: 100%; }
-    #signupPane { display: none; opacity: 0; transform: translateX(50px); }
-
-    .toggle-text { text-align: center; margin-top: 2rem; color: var(--text-muted); font-size: 0.9rem; }
-    .toggle-text span { color: var(--accent-cyan); font-weight: 700; cursor: pointer; transition: 0.3s; }
-    .toggle-text span:hover { color: #fff; text-shadow: 0 0 10px var(--accent-cyan); }
-
-    @media (max-width: 600px) {
-      .auth-wrapper { transform: none !important; } /* Disable 3D tilt on mobile */
-      .auth-card { padding: 2.5rem 1.5rem; }
+    /* --- ANTIGRAVITY WRAPPER --- */
+    .float-wrapper { animation: float 6s ease-in-out infinite; pointer-events: auto; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
     }
+
+    /* --- 3D TILT WRAPPER --- */
+    .tilt-wrapper { transition: transform 0.1s ease-out; transform-style: preserve-3d; }
+
+    /* --- GLASSMORPHISM LOGIN CARD --- */
+    .login-card {
+      background: rgba(17, 24, 39, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      padding: 40px 35px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(56, 189, 248, 0.05);
+    }
+
+    .brand { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; text-align: center; margin-bottom: 5px; background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; color: transparent; }
+    .subtitle { text-align: center; font-size: 0.9rem; color: #9ca3af; margin-bottom: 30px; }
+
+    /* --- INPUT FIELDS --- */
+    .input-group { position: relative; margin-bottom: 25px; }
+    
+    /* FIX APPLIED HERE: padding-right changed to 95px */
+    .input-group input { width: 100%; padding: 15px 95px 15px 45px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #fff; font-size: 1rem; outline: none; transition: all 0.3s; }
+    .input-group input:focus { border-color: #38bdf8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); background: rgba(0, 0, 0, 0.5); }
+    
+    /* Icons inside inputs */
+    .icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; fill: #9ca3af; transition: 0.3s; pointer-events: none; }
+    .input-group input:focus + .icon { fill: #38bdf8; }
+
+    /* --- Send OTP Interactive Text (FIX APPLIED HERE) --- */
+    .send-otp-btn {
+      position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+      color: #38bdf8; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.3s;
+      white-space: nowrap; /* Prevents text from dropping to a new line */
+      user-select: none; /* Prevents accidentally highlighting the text */
+    }
+    .send-otp-btn:hover { text-shadow: 0 0 8px rgba(56, 189, 248, 0.8); color: #fff; }
+
+    /* --- BUTTON --- */
+    .btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #0284c7, #4f46e5); color: #fff; border: none; border-radius: 12px; font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4); position: relative; overflow: hidden; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 15px 35px rgba(79, 70, 229, 0.6); }
+
+    .links { display: flex; justify-content: center; margin-top: 20px; font-size: 0.85rem; }
+    .links a { color: #9ca3af; text-decoration: none; transition: 0.3s; }
+    .links a:hover { color: #38bdf8; text-shadow: 0 0 8px rgba(56, 189, 248, 0.5); }
   </style>
 </head>
 <body>
 
-  <div class="particle-container" id="particleEngine"></div>
+  <canvas id="canvas-bg"></canvas>
 
-  <header>
-    <nav class="nav">
-      <div class="logo">StreamSelector</div>
-    </nav>
-  </header>
-
-  <main>
-    <div class="auth-wrapper" id="authWrapper">
-      <div class="auth-card">
-        <div class="scanline"></div>
-
-        <div class="auth-forms">
+  <div class="container">
+    <div class="float-wrapper">
+      <div class="tilt-wrapper" id="tilt-card">
+        <div class="login-card">
+          <h1 class="brand">StreamSelector</h1>
+          <p class="subtitle">Secure Professional Terminal</p>
           
-          <div class="form-pane" id="loginPane">
-            <h2 class="auth-title">Access Terminal</h2>
-            <p class="auth-sub">Authenticate to view your diagnostic metrics.</p>
+          <form onsubmit="handleLogin(event)">
             
-            <form onsubmit="handleLogin(event)">
-              <div class="input-group">
-                <input type="email" id="loginEmail" required autocomplete="off" />
-                <label>Student ID (Email)</label>
-              </div>
-              <div class="input-group">
-                <input type="password" id="loginPass" required autocomplete="off" />
-                <label>Security Key (Password)</label>
-              </div>
-              <div style="text-align: right; margin-top: -1rem; margin-bottom: 1.5rem;">
-                <a href="#" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none;">Lost your key?</a>
-              </div>
-              <button type="submit" class="btn-primary" id="loginBtn">Initialize Link</button>
-            </form>
-
-            <div style="display: flex; align-items: center; text-align: center; margin-top: 1.5rem; color: var(--text-muted); font-size: 0.8rem;">
-              <hr style="flex: 1; border: none; border-top: 1px solid var(--border-light);">
-              <span style="padding: 0 10px; text-transform: uppercase; letter-spacing: 1px;">Or Access Via</span>
-              <hr style="flex: 1; border: none; border-top: 1px solid var(--border-light);">
+            <div class="input-group">
+              <input type="email" id="emailInput" placeholder="Email Address" required autocomplete="email">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+              <span class="send-otp-btn" id="sendOtpBtn" onclick="triggerOTP()">Send OTP</span>
+            </div>
+            
+            <div class="input-group">
+              <input type="text" id="otpInput" placeholder="Enter OTP" pattern="[0-9]{4,6}" title="Enter 4 to 6 digit OTP" required autocomplete="one-time-code">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H14v4h4v-4h3v-4h-8.35zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
             </div>
 
-            <div class="social-login">
-              <button class="btn-social">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-                Google
-              </button>
-            </div>
+            <button type="submit" class="btn" id="loginBtn">Initialize Login</button>
+          </form>
 
-            <p class="toggle-text">Unregistered Profile? <span onclick="toggleForms()">Initialize New Profile</span></p>
+          <div class="links">
+            <a href="#">Need help accessing your account?</a>
           </div>
-
-          <div class="form-pane" id="signupPane">
-            <h2 class="auth-title">Profile Init</h2>
-            <p class="auth-sub">Create your terminal access credentials.</p>
-            
-            <form onsubmit="handleSignup(event)">
-              <div class="input-group">
-                <input type="text" id="regName" required autocomplete="off" />
-                <label>Full Designation (Name)</label>
-              </div>
-              <div class="input-group">
-                <input type="email" id="regEmail" required autocomplete="off" />
-                <label>Student ID (Email)</label>
-              </div>
-              <div class="input-group">
-                <input type="password" id="regPass" required autocomplete="off" />
-                <label>Create Security Key</label>
-              </div>
-              <button type="submit" class="btn-primary" id="signupBtn">Compile Profile</button>
-            </form>
-
-            <p class="toggle-text">Credentials active? <span onclick="toggleForms()">Return to Login</span></p>
-          </div>
-
         </div>
       </div>
     </div>
-  </main>
+  </div>
 
   <script>
-    // --- 1. PREMIUM 3D PARTICLE GENERATOR ---
-    const pContainer = document.getElementById('particleEngine');
-    const colorsArr = ['#38bdf8', '#c084fc', '#ec4899'];
+    // --- 1. REAL API INTEGRATION LOGIC ---
     
-    for(let i=0; i<6; i++) {
-      let orb = document.createElement('div');
-      orb.className = 'huge-orb';
-      orb.style.width = (Math.random() * 300 + 200) + 'px';
-      orb.style.height = orb.style.width;
-      orb.style.left = (Math.random() * 100) + 'vw';
-      orb.style.top = (Math.random() * 100) + 'vh';
-      orb.style.background = colorsArr[Math.floor(Math.random() * colorsArr.length)];
-      orb.style.animationDelay = '-' + (Math.random() * 20) + 's';
-      pContainer.appendChild(orb);
-    }
-    for(let i=0; i<15; i++) {
-      let node = document.createElement('div');
-      node.className = 'mid-node';
-      node.style.width = (Math.random() * 10 + 5) + 'px';
-      node.style.height = node.style.width;
-      node.style.left = (Math.random() * 100) + 'vw';
-      node.style.top = (Math.random() * 100) + 'vh';
-      node.style.background = colorsArr[Math.floor(Math.random() * colorsArr.length)];
-      node.style.animationDelay = '-' + (Math.random() * 10) + 's';
-      pContainer.appendChild(node);
-    }
-    for(let i=0; i<60; i++) {
-      let star = document.createElement('div');
-      star.className = 'micro-star';
-      star.style.width = (Math.random() * 3 + 1) + 'px';
-      star.style.height = star.style.width;
-      star.style.left = (Math.random() * 100) + 'vw';
-      star.style.top = (Math.random() * 100) + 'vh';
-      star.style.animationDelay = '-' + (Math.random() * 5) + 's';
-      pContainer.appendChild(star);
-    }
+    async function triggerOTP() {
+      const emailInput = document.getElementById('emailInput').value;
+      const otpBtn = document.getElementById('sendOtpBtn');
+      const otpInput = document.getElementById('otpInput');
 
-    // --- 2. 3D HOVER PHYSICS ON CARD ---
-    const authWrapper = document.getElementById('authWrapper');
-    if (window.matchMedia("(pointer: fine)").matches) {
-      document.addEventListener("mousemove", (e) => {
-        const x = e.clientX - window.innerWidth / 2;
-        const y = e.clientY - window.innerHeight / 2;
-        const rotateX = (y / window.innerHeight) * -15; // Max 15 deg tilt
-        const rotateY = (x / window.innerWidth) * 15;
-        authWrapper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-      });
-      document.addEventListener("mouseleave", () => {
-        authWrapper.style.transform = `rotateX(0deg) rotateY(0deg)`;
-      });
-    }
-
-    // --- 3. FORM TOGGLE LOGIC ---
-    let isLogin = true;
-    function toggleForms() {
-      const loginPane = document.getElementById('loginPane');
-      const signupPane = document.getElementById('signupPane');
-      
-      if (isLogin) {
-        // Switch to Signup
-        loginPane.style.opacity = '0';
-        loginPane.style.transform = 'translateX(-50px)';
-        setTimeout(() => {
-          loginPane.style.display = 'none';
-          signupPane.style.display = 'block';
-          setTimeout(() => {
-            signupPane.style.opacity = '1';
-            signupPane.style.transform = 'translateX(0)';
-          }, 50);
-        }, 300);
-      } else {
-        // Switch to Login
-        signupPane.style.opacity = '0';
-        signupPane.style.transform = 'translateX(50px)';
-        setTimeout(() => {
-          signupPane.style.display = 'none';
-          loginPane.style.display = 'block';
-          setTimeout(() => {
-            loginPane.style.opacity = '1';
-            loginPane.style.transform = 'translateX(0)';
-          }, 50);
-        }, 300);
+      // Basic validation
+      if (!emailInput || !emailInput.includes('@')) {
+        alert("Please enter a valid email address first.");
+        return;
       }
-      isLogin = !isLogin;
+
+      // UI Loading state
+      otpBtn.innerText = "Sending...";
+      otpBtn.style.pointerEvents = "none";
+
+      try {
+        // Send request to your Node.js backend
+        const response = await fetch('http://localhost:3000/api/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: emailInput })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Success state
+          otpBtn.innerText = "Sent ✓";
+          otpBtn.style.color = "#10b981"; // Success Green
+          otpInput.focus();
+        } else {
+          // Backend returned an error (e.g., missing email)
+          otpBtn.innerText = "Failed";
+          otpBtn.style.color = "#ef4444"; // Error Red
+          otpBtn.style.pointerEvents = "auto";
+          alert("Error: " + data.message);
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        otpBtn.innerText = "Send OTP";
+        otpBtn.style.pointerEvents = "auto";
+        alert("Could not connect to the backend server. Make sure your Node.js server is running on port 3000.");
+      }
     }
 
-    // --- 4. SUBMISSION LOGIC ---
-    function handleLogin(e) {
-      e.preventDefault();
+    async function handleLogin(e) {
+      e.preventDefault(); 
+      
+      const emailInput = document.getElementById('emailInput').value;
+      const otpInput = document.getElementById('otpInput').value;
       const btn = document.getElementById('loginBtn');
-      btn.innerText = "AUTHENTICATING...";
-      btn.style.background = "var(--accent-emerald)";
-      btn.style.boxShadow = "0 10px 30px rgba(16, 185, 129, 0.4)";
       
-      // Simulate API call, then warp to home/quiz
-      setTimeout(() => {
-        btn.innerText = "ACCESS GRANTED 🚀";
-        setTimeout(() => { window.location.href = 'index.html'; }, 500);
-      }, 1000);
+      // Loading state
+      btn.innerText = "Verifying Link...";
+      btn.style.opacity = "0.8";
+      btn.style.cursor = "wait";
+
+      try {
+        // Send verification request to backend
+        const response = await fetch('http://localhost:3000/api/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: emailInput, otp: otpInput })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Success: OTP is correct!
+          btn.innerText = "Access Granted 🚀";
+          btn.style.background = "linear-gradient(135deg, #10b981, #059669)"; // Green gradient
+          btn.style.boxShadow = "0 10px 25px rgba(16, 185, 129, 0.4)";
+          
+          // Redirect to index.html
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 600);
+        } else {
+          // Failure: Wrong OTP or expired
+          btn.innerText = "Initialize Login";
+          btn.style.opacity = "1";
+          btn.style.cursor = "pointer";
+          alert(data.message || "Invalid OTP. Please try again.");
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        btn.innerText = "Initialize Login";
+        btn.style.opacity = "1";
+        btn.style.cursor = "pointer";
+        alert("Could not connect to server. Is the backend running?");
+      }
     }
 
-    function handleSignup(e) {
-      e.preventDefault();
-      const btn = document.getElementById('signupBtn');
-      btn.innerText = "WRITING TO MATRIX...";
-      btn.style.background = "var(--accent-emerald)";
+
+    // --- 2. 3D CARD TILT LOGIC ---
+    const tiltCard = document.getElementById('tilt-card');
+    document.addEventListener('mousemove', (e) => {
+      if (window.innerWidth < 768) return; 
+      const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+      const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+      tiltCard.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+    });
+    
+    document.addEventListener('mouseleave', () => {
+      tiltCard.style.transform = `rotateY(0deg) rotateX(0deg)`;
+    });
+
+
+    // --- 3. POWERFUL PARTICLE NETWORK ENGINE ---
+    const canvas = document.getElementById('canvas-bg');
+    const ctx = canvas.getContext('2d');
+    
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particlesArray = [];
+    const numberOfParticles = (canvas.width * canvas.height) / 12000;
+
+    let mouse = { x: null, y: null, radius: 150 }
+
+    window.addEventListener('mousemove', function(event) {
+      mouse.x = event.x;
+      mouse.y = event.y;
+    });
+
+    window.addEventListener('mouseout', function() {
+      mouse.x = undefined;
+      mouse.y = undefined;
+    });
+
+    class Particle {
+      constructor(x, y, directionX, directionY, size, color) {
+        this.x = x; this.y = y;
+        this.directionX = directionX; this.directionY = directionY;
+        this.size = size; this.color = color;
+      }
       
-      setTimeout(() => {
-        btn.innerText = "PROFILE INITIALIZED 🚀";
-        setTimeout(() => { window.location.href = 'quiz.html'; }, 500); // Send new users straight to quiz
-      }, 1000);
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+
+      update() {
+        if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+        if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+
+        let dx = mouse.x - this.x;
+        let dy = mouse.y - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < mouse.radius + this.size) {
+          if (mouse.x < this.x && this.x < canvas.width - this.size * 10) this.x += 2;
+          if (mouse.x > this.x && this.x > this.size * 10) this.x -= 2;
+          if (mouse.y < this.y && this.y < canvas.height - this.size * 10) this.y += 2;
+          if (mouse.y > this.y && this.y > this.size * 10) this.y -= 2;
+        }
+
+        this.x += this.directionX;
+        this.y += this.directionY;
+        this.draw();
+      }
     }
+
+    function init() {
+      particlesArray = [];
+      for (let i = 0; i < numberOfParticles; i++) {
+        let size = (Math.random() * 2) + 1;
+        let x = (Math.random() * ((canvas.width - size * 2) - (size * 2)) + size * 2);
+        let y = (Math.random() * ((canvas.height - size * 2) - (size * 2)) + size * 2);
+        let directionX = (Math.random() * 1) - 0.5;
+        let directionY = (Math.random() * 1) - 0.5;
+        let color = '#38bdf8'; 
+        particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+      }
+    }
+
+    function connect() {
+      let opacityValue = 1;
+      for (let a = 0; a < particlesArray.length; a++) {
+        for (let b = a; b < particlesArray.length; b++) {
+          let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + 
+                         ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+          
+          if (distance < (canvas.width / 10) * (canvas.height / 10)) {
+            opacityValue = 1 - (distance / 20000);
+            ctx.strokeStyle = `rgba(129, 140, 248, ${opacityValue})`; 
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+      }
+      connect();
+    }
+
+    window.addEventListener('resize', function() {
+      canvas.width = innerWidth;
+      canvas.height = innerHeight;
+      init();
+    });
+
+    init();
+    animate();
   </script>
 </body>
 </html>
